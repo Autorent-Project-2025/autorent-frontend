@@ -1,7 +1,11 @@
 <template>
-  <div class="min-h-screen bg-gray-100 py-10 px-4 sm:px-6 lg:px-8">
+  <div
+    class="min-h-screen bg-gray-100 dark:bg-gray-900 py-10 px-4 sm:px-6 lg:px-8 transition-colors duration-300"
+  >
     <div class="max-w-7xl mx-auto">
-      <h1 class="text-3xl font-extrabold text-gray-900 mb-8">Автопарк</h1>
+      <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-8">
+        Автопарк
+      </h1>
 
       <div
         v-if="cars.length > 0"
@@ -10,9 +14,9 @@
         <div
           v-for="car in cars"
           :key="car.id"
-          class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col"
+          class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col transform hover:-translate-y-1"
         >
-          <div class="relative h-48 w-full bg-gray-200">
+          <div class="relative h-48 w-full bg-gray-200 dark:bg-gray-700">
             <img
               :src="car.imageUrl || config.app.defaultCarImage"
               :alt="`${car.brand} ${car.model}`"
@@ -20,19 +24,25 @@
             />
 
             <div
-              class="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm"
+              class="absolute top-2 right-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm"
             >
-              <span class="font-bold text-blue-600">${{ car.priceHour }}</span>
-              <span class="text-xs text-gray-500 font-medium">/час</span>
+              <span class="font-bold text-blue-600 dark:text-blue-400"
+                >${{ car.priceHour }}</span
+              >
+              <span class="text-xs text-gray-500 dark:text-gray-400 font-medium"
+                >/час</span
+              >
             </div>
           </div>
 
           <div class="p-5 flex flex-col grow">
             <div class="mb-4">
-              <h3 class="text-xl font-bold text-gray-800 leading-tight">
+              <h3
+                class="text-xl font-bold text-gray-800 dark:text-white leading-tight"
+              >
                 {{ car.brand }} {{ car.model }}
               </h3>
-              <p class="text-gray-500 text-sm mt-1">
+              <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
                 {{ car.year }} год выпуска
               </p>
             </div>
@@ -40,7 +50,7 @@
             <div class="mt-auto">
               <button
                 @click="book(car.id)"
-                class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 active:scale-[0.98]"
+                class="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition duration-200 active:scale-[0.98]"
               >
                 Забронировать
               </button>
@@ -50,7 +60,9 @@
       </div>
 
       <div v-else class="text-center py-20">
-        <p class="text-gray-500 text-lg">Загрузка автомобилей...</p>
+        <p class="text-gray-500 dark:text-gray-400 text-lg">
+          Загрузка автомобилей...
+        </p>
       </div>
     </div>
   </div>
