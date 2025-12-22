@@ -50,9 +50,10 @@
             <div class="mt-auto">
               <button
                 @click="book(car.id)"
-                class="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition duration-200 active:scale-[0.98]"
+                :disabled="bookingInProgress"
+                class="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Забронировать
+                {{ bookingInProgress ? "Бронирование..." : "Забронировать" }}
               </button>
             </div>
           </div>
@@ -60,7 +61,10 @@
       </div>
 
       <div v-else class="text-center py-20">
-        <p class="text-gray-500 dark:text-gray-400 text-lg">
+        <div
+          class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400"
+        ></div>
+        <p class="text-gray-500 dark:text-gray-400 text-lg mt-4">
           Загрузка автомобилей...
         </p>
       </div>
@@ -74,27 +78,36 @@ import { getCars } from "../api/cars";
 import { createBooking } from "../api/booking";
 import type { Car } from "../types/Car";
 import { config } from "../config";
+import { useToast } from "../composables/useToast";
 
 const cars = ref<Car[]>([]);
+const bookingInProgress = ref(false);
+const { success, error } = useToast();
 
 onMounted(async () => {
   try {
     cars.value = await getCars();
   } catch (e) {
     console.error("Ошибка при загрузке авто:", e);
+    error("Не удалось загрузить список автомобилей");
   }
 });
 
 async function book(id: number) {
+  if (bookingInProgress.value) return;
+
+  bookingInProgress.value = true;
   const start = new Date().toISOString();
   const hoursToAdd = config.booking.defaultDurationHours;
   const end = new Date(Date.now() + hoursToAdd * 60 * 60 * 1000).toISOString();
 
   try {
     await createBooking(id, start, end);
-    alert("Автомобиль успешно забронирован!");
+    success("Автомобиль успешно забронирован!");
   } catch (e) {
-    alert("Ошибка бронирования");
+    error("Ошибка бронирования. Попробуйте снова.");
+  } finally {
+    bookingInProgress.value = false;
   }
 }
 </script>

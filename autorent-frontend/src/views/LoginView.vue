@@ -48,9 +48,10 @@
 
         <button
           type="submit"
-          class="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:bg-blue-700 transition duration-300 transform active:scale-95"
+          :disabled="loading"
+          class="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:bg-blue-700 transition duration-300 transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Войти
+          {{ loading ? "Вход..." : "Войти" }}
         </button>
       </form>
 
@@ -73,17 +74,26 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { auth } from "../store/auth";
+import { useToast } from "../composables/useToast";
 
 const router = useRouter();
 const email = ref("");
 const password = ref("");
+const loading = ref(false);
+const { success, error } = useToast();
 
 async function onLogin() {
+  if (loading.value) return;
+
+  loading.value = true;
   try {
     await auth.login(email.value, password.value);
+    success("Добро пожаловать!");
     router.push("/cars");
-  } catch (error) {
-    alert("Ошибка входа! Проверьте данные.");
+  } catch (err) {
+    error("Ошибка входа! Проверьте email и пароль.");
+  } finally {
+    loading.value = false;
   }
 }
 </script>
