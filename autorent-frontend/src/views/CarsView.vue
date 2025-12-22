@@ -1,72 +1,153 @@
 <template>
   <div
-    class="min-h-screen bg-gray-100 dark:bg-gray-900 py-10 px-4 sm:px-6 lg:px-8 transition-colors duration-300"
+    class="min-h-screen bg-gray-50 dark:bg-gray-950 py-24 px-4 sm:px-6 lg:px-8 transition-colors duration-300"
   >
     <div class="max-w-7xl mx-auto">
-      <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-8">
-        Автопарк
-      </h1>
+      <!-- Header -->
+      <div class="mb-12 space-y-4 animate-slide-up">
+        <h1
+          class="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white"
+        >
+          Наш автопарк
+        </h1>
+        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl">
+          Выберите автомобиль вашей мечты из нашей коллекции премиальных и
+          бизнес-автомобилей
+        </p>
+      </div>
 
+      <!-- Cars Grid -->
       <div
         v-if="cars.length > 0"
-        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
       >
         <div
           v-for="car in cars"
           :key="car.id"
-          class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col transform hover:-translate-y-1"
+          class="group relative bg-white dark:bg-gray-900 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 card-hover border border-gray-200 dark:border-gray-800"
         >
-          <div class="relative h-48 w-full bg-gray-200 dark:bg-gray-700">
+          <!-- Image Container -->
+          <div
+            class="relative h-64 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900"
+          >
             <img
               :src="car.imageUrl || config.app.defaultCarImage"
               :alt="`${car.brand} ${car.model}`"
-              class="h-full w-full object-cover"
+              class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
             />
 
+            <!-- Gradient Overlay -->
             <div
-              class="absolute top-2 right-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm"
+              class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            ></div>
+
+            <!-- Price Badge -->
+            <div
+              class="absolute top-4 right-4 glass px-4 py-2 rounded-full backdrop-blur-md"
             >
-              <span class="font-bold text-blue-600 dark:text-blue-400"
-                >${{ car.priceHour }}</span
-              >
-              <span class="text-xs text-gray-500 dark:text-gray-400 font-medium"
-                >/час</span
-              >
+              <div class="flex items-baseline gap-1">
+                <span class="text-2xl font-bold text-white"
+                  >${{ car.priceHour }}</span
+                >
+                <span class="text-sm text-gray-300 font-medium">/час</span>
+              </div>
+            </div>
+
+            <!-- Year Badge -->
+            <div
+              class="absolute top-4 left-4 glass px-3 py-1.5 rounded-full backdrop-blur-md"
+            >
+              <span class="text-sm font-semibold text-white">{{
+                car.year
+              }}</span>
             </div>
           </div>
 
-          <div class="p-5 flex flex-col grow">
-            <div class="mb-4">
+          <!-- Content -->
+          <div class="p-6 space-y-6">
+            <!-- Car Info -->
+            <div class="space-y-2">
               <h3
-                class="text-xl font-bold text-gray-800 dark:text-white leading-tight"
+                class="text-2xl font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"
               >
                 {{ car.brand }} {{ car.model }}
               </h3>
-              <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
+              <p class="text-gray-600 dark:text-gray-400 text-sm font-medium">
                 {{ car.year }} год выпуска
               </p>
             </div>
 
-            <div class="mt-auto">
-              <button
-                @click="book(car.id)"
-                :disabled="bookingInProgress"
-                class="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+            <!-- Features (if available) -->
+            <div class="flex flex-wrap gap-2">
+              <span
+                class="px-3 py-1 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 text-xs font-semibold rounded-full"
               >
-                {{ bookingInProgress ? "Бронирование..." : "Забронировать" }}
-              </button>
+                Премиум
+              </span>
+              <span
+                class="px-3 py-1 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 text-xs font-semibold rounded-full"
+              >
+                Доступен
+              </span>
             </div>
+
+            <!-- Book Button -->
+            <button
+              @click="book(car.id)"
+              :disabled="bookingInProgress"
+              class="w-full relative overflow-hidden bg-primary-600 hover:bg-primary-700 disabled:bg-gray-400 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 hover:shadow-xl hover:shadow-primary-500/50 active:scale-95 disabled:cursor-not-allowed disabled:hover:shadow-none group/btn"
+            >
+              <span
+                class="relative z-10 flex items-center justify-center gap-2"
+              >
+                <span v-if="!bookingInProgress">Забронировать</span>
+                <span v-else>Бронирование...</span>
+                <svg
+                  v-if="!bookingInProgress"
+                  class="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
+                </svg>
+              </span>
+
+              <!-- Shimmer effect -->
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700"
+              ></div>
+            </button>
           </div>
+
+          <!-- Glow Effect on Hover -->
+          <div
+            class="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+            style="box-shadow: 0 0 40px rgba(59, 130, 246, 0.3)"
+          ></div>
         </div>
       </div>
 
-      <div v-else class="text-center py-20">
-        <div
-          class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400"
-        ></div>
-        <p class="text-gray-500 dark:text-gray-400 text-lg mt-4">
-          Загрузка автомобилей...
-        </p>
+      <!-- Loading State -->
+      <div v-else class="text-center py-32">
+        <div class="inline-flex flex-col items-center gap-6">
+          <div class="relative">
+            <div
+              class="w-16 h-16 rounded-full border-4 border-primary-200 dark:border-primary-900 border-t-primary-600 dark:border-t-primary-400 animate-spin"
+            ></div>
+            <div
+              class="absolute inset-0 w-16 h-16 rounded-full glow-primary opacity-50"
+            ></div>
+          </div>
+          <p class="text-gray-600 dark:text-gray-400 text-lg font-medium">
+            Загрузка автомобилей...
+          </p>
+        </div>
       </div>
     </div>
   </div>

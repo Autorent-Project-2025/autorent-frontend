@@ -2,13 +2,14 @@ import { ref } from "vue";
 
 type Theme = "light" | "dark";
 
-const theme = ref<Theme>((localStorage.getItem("theme") as Theme) || "light");
+const theme = ref<Theme>("light");
 
 export function useTheme() {
   const setTheme = (newTheme: Theme) => {
     theme.value = newTheme;
     localStorage.setItem("theme", newTheme);
 
+    // dark class html
     if (newTheme === "dark") {
       document.documentElement.classList.add("dark");
     } else {
@@ -17,15 +18,19 @@ export function useTheme() {
   };
 
   const toggleTheme = () => {
-    setTheme(theme.value === "dark" ? "light" : "dark");
+    setTheme(theme.value === "light" ? "dark" : "light");
   };
 
-  // Инициализация при первой загрузке
   const initTheme = () => {
-    if (theme.value === "dark") {
-      document.documentElement.classList.add("dark");
+    const savedTheme = localStorage.getItem("theme") as Theme | null;
+    if (savedTheme) {
+      setTheme(savedTheme);
     } else {
-      document.documentElement.classList.remove("dark");
+      // checking system confs
+      const prefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
+      setTheme(prefersDark ? "dark" : "light");
     }
   };
 
