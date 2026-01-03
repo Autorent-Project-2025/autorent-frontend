@@ -4,7 +4,8 @@ import LoginView from "../views/LoginView.vue";
 import RegisterView from "../views/RegisterView.vue";
 import CarsView from "../views/CarsView.vue";
 import MyBookingsView from "../views/MyBookingsView.vue";
-import NotFoundView from "../views/NotFoundView.vue"; // ← ДОБАВИЛ
+import NotFoundView from "../views/NotFoundView.vue"; // 404
+import CarDetailView from "@/views/CarDetailView.vue";
 
 const routes = [
   {
@@ -28,6 +29,12 @@ const routes = [
     // ← ДОБАВИЛ
     path: "/:pathMatch(.*)*",
     component: NotFoundView,
+  },
+  {
+    path: "/cars/:id",
+    name: "CarDetail",
+    component: CarDetailView,
+    meta: { requiresAuth: false }, // currently without auth needed
   },
 ];
 

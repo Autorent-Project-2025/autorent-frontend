@@ -24,17 +24,17 @@
         <div
           v-for="car in carsWithStatus"
           :key="car.id"
-          class="group relative bg-white dark:bg-gray-900 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 card-hover border border-gray-200 dark:border-gray-800"
+          class="group relative bg-white dark:bg-gray-900 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 card-hover border border-gray-200 dark:border-gray-800 flex flex-col"
           :class="{ 'opacity-75': !car.isAvailable }"
         >
           <!-- Image Container -->
           <div
-            class="relative h-64 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900"
+            class="relative h-64 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 flex-shrink-0"
           >
             <img
               :src="car.imageUrl || config.app.defaultCarImage"
               :alt="`${car.brand} ${car.model}`"
-              class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+              class="car-card-image w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
             />
 
             <!-- Gradient Overlay -->
@@ -77,11 +77,11 @@
           </div>
 
           <!-- Content -->
-          <div class="p-6 space-y-6">
+          <div class="p-6 flex flex-col flex-1">
             <!-- Car Info -->
-            <div class="space-y-2">
+            <div class="mb-4">
               <h3
-                class="text-2xl font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"
+                class="text-2xl font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors mb-2"
               >
                 {{ car.brand }} {{ car.model }}
               </h3>
@@ -91,7 +91,7 @@
             </div>
 
             <!-- Features -->
-            <div class="flex flex-wrap gap-2">
+            <div class="flex flex-wrap gap-2 mb-6">
               <span
                 class="px-3 py-1 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 text-xs font-semibold rounded-full"
               >
@@ -109,20 +109,19 @@
               </span>
             </div>
 
-            <!-- Book Button -->
-            <button
-              @click="openBookingModal(car)"
-              :disabled="!car.isAvailable"
-              class="w-full relative overflow-hidden bg-primary-600 hover:bg-primary-700 disabled:bg-gray-400 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 hover:shadow-xl hover:shadow-primary-500/50 active:scale-95 disabled:cursor-not-allowed disabled:hover:shadow-none group/btn"
-            >
-              <span
-                class="relative z-10 flex items-center justify-center gap-2"
+            <!-- Spacer -->
+            <div class="flex-1"></div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-3">
+              <!-- View Details Button -->
+              <router-link
+                :to="`/cars/${car.id}`"
+                class="flex-1 px-6 py-4 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-white font-bold rounded-2xl transition-all hover:shadow-lg active:scale-95 flex items-center justify-center gap-2"
               >
-                <span v-if="car.isAvailable">Забронировать</span>
-                <span v-else>Недоступен</span>
+                <span>Подробнее</span>
                 <svg
-                  v-if="car.isAvailable"
-                  class="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform"
+                  class="w-5 h-5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -131,17 +130,45 @@
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-              </span>
+              </router-link>
 
-              <!-- Shimmer effect -->
-              <div
-                v-if="car.isAvailable"
-                class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700"
-              ></div>
-            </button>
+              <!-- Book Button -->
+              <button
+                @click="openBookingModal(car)"
+                :disabled="!car.isAvailable"
+                class="flex-1 relative overflow-hidden bg-primary-600 hover:bg-primary-700 disabled:bg-gray-400 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 hover:shadow-xl hover:shadow-primary-500/50 active:scale-95 disabled:cursor-not-allowed disabled:hover:shadow-none group/btn"
+              >
+                <span
+                  class="relative z-10 flex items-center justify-center gap-2"
+                >
+                  <span v-if="car.isAvailable">Забронировать</span>
+                  <span v-else>Недоступен</span>
+                  <svg
+                    v-if="car.isAvailable"
+                    class="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
+                  </svg>
+                </span>
+
+                <!-- Shimmer effect -->
+                <div
+                  v-if="car.isAvailable"
+                  class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700"
+                ></div>
+              </button>
+            </div>
           </div>
 
           <!-- Glow Effect on Hover -->
