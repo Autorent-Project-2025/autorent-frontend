@@ -16,7 +16,7 @@ export async function createBooking(carId: number, start: string, end: string) {
 }
 // cancelBooking logic for simplicity
 export async function cancelBooking(bookingId: number) {
-  const res = await api.delete(`/booking/${bookingId}`);
+  const res = await api.post(`/booking/${bookingId}/cancel`);
   return res.data;
 }
 
