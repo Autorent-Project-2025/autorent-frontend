@@ -93,17 +93,14 @@
 
             <!-- Book Button -->
             <button
-              @click="book(car.id)"
-              :disabled="bookingInProgress"
-              class="w-full relative overflow-hidden bg-primary-600 hover:bg-primary-700 disabled:bg-gray-400 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 hover:shadow-xl hover:shadow-primary-500/50 active:scale-95 disabled:cursor-not-allowed disabled:hover:shadow-none group/btn"
+              @click="openBookingModal(car)"
+              class="w-full relative overflow-hidden bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 hover:shadow-xl hover:shadow-primary-500/50 active:scale-95 group/btn"
             >
               <span
                 class="relative z-10 flex items-center justify-center gap-2"
               >
-                <span v-if="!bookingInProgress">Забронировать</span>
-                <span v-else>Бронирование...</span>
+                <span>Забронировать</span>
                 <svg
-                  v-if="!bookingInProgress"
                   class="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform"
                   fill="none"
                   stroke="currentColor"
@@ -150,6 +147,15 @@
         </div>
       </div>
     </div>
+
+    <!-- Booking Modal -->
+    <BookingModal
+      v-if="selectedCar"
+      :is-open="isModalOpen"
+      :car="selectedCar"
+      @close="closeBookingModal"
+      @confirm="handleBookingConfirm"
+    />
   </div>
 </template>
 
@@ -160,9 +166,11 @@ import { createBooking } from "../api/booking";
 import type { Car } from "../types/Car";
 import { config } from "../config";
 import { useToast } from "../composables/useToast";
+import BookingModal from "../components/BookingModal.vue";
 
 const cars = ref<Car[]>([]);
-const bookingInProgress = ref(false);
+const selectedCar = ref<Car | null>(null);
+const isModalOpen = ref(false);
 const { success, error } = useToast();
 
 onMounted(async () => {
@@ -174,21 +182,31 @@ onMounted(async () => {
   }
 });
 
-async function book(id: number) {
-  if (bookingInProgress.value) return;
+function openBookingModal(car: Car) {
+  selectedCar.value = car;
+  isModalOpen.value = true;
+}
 
-  bookingInProgress.value = true;
-  const start = new Date().toISOString();
-  const hoursToAdd = config.booking.defaultDurationHours;
-  const end = new Date(Date.now() + hoursToAdd * 60 * 60 * 1000).toISOString();
+function closeBookingModal() {
+  isModalOpen.value = false;
+  // Небольшая задержка перед очисткой, чтобы анимация закрытия прошла
+  setTimeout(() => {
+    selectedCar.value = null;
+  }, 300);
+}
+
+async function handleBookingConfirm(startDate: string, endDate: string) {
+  if (!selectedCar.value) return;
 
   try {
-    await createBooking(id, start, end);
-    success("Автомобиль успешно забронирован!");
+    await createBooking(selectedCar.value.id, startDate, endDate);
+    success(
+      `${selectedCar.value.brand} ${selectedCar.value.model} успешно забронирован!`
+    );
+    closeBookingModal();
   } catch (e) {
+    console.error("Ошибка бронирования:", e);
     error("Ошибка бронирования. Попробуйте снова.");
-  } finally {
-    bookingInProgress.value = false;
   }
 }
 </script>
