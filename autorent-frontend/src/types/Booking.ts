@@ -14,7 +14,7 @@ export type BookingStatus =
   | "confirmed" //
   | "active" //
   | "completed" //
-  | "canceled"; //
+  | "Canceled"; //
 
 export interface BookingWithCarStatus extends Booking {
   computedStatus: ComputedBookingStatus;
