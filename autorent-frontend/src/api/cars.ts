@@ -36,9 +36,9 @@ export async function createCarComment(
   content: string,
   rating: number
 ) {
-  // ✅ Правильный endpoint согласно вашему бэкенду
-  const res = await api.post("/car-comments", {
-    carId, // ✅ carId в теле запроса (не в URL!)
+  // ✅ Endpoint: /api/comment
+  const res = await api.post("/comment", {
+    carId,
     content,
     rating,
   });
@@ -51,7 +51,7 @@ export async function updateCarComment(
   content: string,
   rating: number
 ) {
-  const res = await api.put(`/car-comments/${commentId}`, {
+  const res = await api.put(`/comment/${commentId}`, {
     content,
     rating,
   });
@@ -60,6 +60,6 @@ export async function updateCarComment(
 
 // Удалить комментарий
 export async function deleteCarComment(commentId: number) {
-  const res = await api.delete(`/car-comments/${commentId}`);
+  const res = await api.delete(`/comment/${commentId}`);
   return res.data;
 }
