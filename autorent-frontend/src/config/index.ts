@@ -1,6 +1,6 @@
 export const config = {
   api: {
-    baseURL: import.meta.env.VITE_API_URL || "http://localhost:5219/api",
+    baseURL: import.meta.env.VITE_API_URL || "http://localhost:2651/api",
   },
   app: {
     name: import.meta.env.VITE_APP_NAME || "AutoRent",

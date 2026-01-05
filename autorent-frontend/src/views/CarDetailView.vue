@@ -44,63 +44,22 @@
         <div class="grid lg:grid-cols-2 gap-8">
           <!-- Left Column -->
           <div class="flex flex-col gap-6">
-            <!-- Images -->
+            <!-- Main Image -->
             <div class="space-y-4 flex-shrink-0">
-              <!-- Main Image -->
               <div
                 class="relative h-96 rounded-3xl overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-800 dark:to-gray-900 shadow-2xl"
               >
                 <img
-                  :src="currentImage"
+                  :src="
+                    car.imageUrl || 'https://placehold.co/800x600?text=No+Image'
+                  "
                   :alt="`${car.brand} ${car.model}`"
                   class="car-detail-main-image w-full h-full object-cover"
                 />
-
-                <!-- Image Navigation -->
-                <div
-                  v-if="car.images && car.images.length > 1"
-                  class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2"
-                >
-                  <button
-                    v-for="(img, index) in car.images"
-                    :key="index"
-                    @click="currentImageIndex = index"
-                    :class="[
-                      'w-3 h-3 rounded-full transition-all',
-                      currentImageIndex === index
-                        ? 'bg-white w-8'
-                        : 'bg-white/50 hover:bg-white/75',
-                    ]"
-                  ></button>
-                </div>
-              </div>
-
-              <!-- Thumbnail Gallery -->
-              <div
-                v-if="car.images && car.images.length > 1"
-                class="grid grid-cols-4 gap-3"
-              >
-                <button
-                  v-for="(img, index) in car.images.slice(0, 4)"
-                  :key="index"
-                  @click="currentImageIndex = index"
-                  :class="[
-                    'relative h-24 rounded-xl overflow-hidden transition-all',
-                    currentImageIndex === index
-                      ? 'ring-4 ring-primary-500 scale-105'
-                      : 'ring-2 ring-gray-200 dark:ring-gray-700 hover:ring-primary-300',
-                  ]"
-                >
-                  <img
-                    :src="img"
-                    :alt="`${car.brand} ${car.model} - фото ${index + 1}`"
-                    class="w-full h-full object-cover"
-                  />
-                </button>
               </div>
             </div>
 
-            <!-- Description - растягивается до нижней границы Features -->
+            <!-- Description -->
             <div
               v-if="car.description"
               class="p-6 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 flex flex-col flex-1"
@@ -131,10 +90,7 @@
                 </div>
 
                 <!-- Rating -->
-                <div
-                  v-if="car.averageRating"
-                  class="flex flex-col items-end gap-1"
-                >
+                <div v-if="car.rating" class="flex flex-col items-end gap-1">
                   <div class="flex items-center gap-2">
                     <div class="flex items-center gap-1">
                       <svg
@@ -142,7 +98,7 @@
                         :key="i"
                         :class="[
                           'w-5 h-5',
-                          i <= Math.round(car.averageRating)
+                          i <= Math.round(car.rating)
                             ? 'text-yellow-400 fill-current'
                             : 'text-gray-300 dark:text-gray-600',
                         ]"
@@ -156,11 +112,11 @@
                     <span
                       class="text-2xl font-bold text-gray-900 dark:text-white"
                     >
-                      {{ car.averageRating.toFixed(1) }}
+                      {{ car.rating.toFixed(1) }}
                     </span>
                   </div>
                   <p class="text-sm text-gray-500 dark:text-gray-400">
-                    {{ car.totalReviews }} отзывов
+                    {{ car.comments?.length || 0 }} отзывов
                   </p>
                 </div>
               </div>
@@ -180,218 +136,6 @@
                 <span class="text-gray-500 dark:text-gray-400 ml-4"
                   >или ${{ car.priceDay }}/день</span
                 >
-              </div>
-            </div>
-
-            <!-- Specifications - Expanded -->
-            <div
-              v-if="car.specifications"
-              class="p-6 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800"
-            >
-              <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">
-                Характеристики
-              </h2>
-              <div class="grid grid-cols-2 gap-x-4 gap-y-5">
-                <div
-                  v-if="car.specifications.engine"
-                  class="flex items-center gap-3"
-                >
-                  <div
-                    class="w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center flex-shrink-0"
-                  >
-                    <svg
-                      class="w-5 h-5 text-primary-600 dark:text-primary-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M13 10V3L4 14h7v7l9-11h-7z"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">
-                      Двигатель
-                    </p>
-                    <p class="font-semibold text-gray-900 dark:text-white">
-                      {{ car.specifications.engine }}
-                    </p>
-                  </div>
-                </div>
-
-                <div
-                  v-if="car.specifications.transmission"
-                  class="flex items-center gap-3"
-                >
-                  <div
-                    class="w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center flex-shrink-0"
-                  >
-                    <svg
-                      class="w-5 h-5 text-primary-600 dark:text-primary-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">
-                      Коробка передач
-                    </p>
-                    <p class="font-semibold text-gray-900 dark:text-white">
-                      {{ car.specifications.transmission }}
-                    </p>
-                  </div>
-                </div>
-
-                <div
-                  v-if="car.specifications.seats"
-                  class="flex items-center gap-3"
-                >
-                  <div
-                    class="w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center flex-shrink-0"
-                  >
-                    <svg
-                      class="w-5 h-5 text-primary-600 dark:text-primary-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">Мест</p>
-                    <p class="font-semibold text-gray-900 dark:text-white">
-                      {{ car.specifications.seats }}
-                    </p>
-                  </div>
-                </div>
-
-                <div
-                  v-if="car.specifications.fuelType"
-                  class="flex items-center gap-3"
-                >
-                  <div
-                    class="w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center flex-shrink-0"
-                  >
-                    <svg
-                      class="w-5 h-5 text-primary-600 dark:text-primary-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">
-                      Топливо
-                    </p>
-                    <p class="font-semibold text-gray-900 dark:text-white">
-                      {{ car.specifications.fuelType }}
-                    </p>
-                  </div>
-                </div>
-
-                <div
-                  v-if="car.specifications.color"
-                  class="flex items-center gap-3"
-                >
-                  <div
-                    class="w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center flex-shrink-0"
-                  >
-                    <svg
-                      class="w-5 h-5 text-primary-600 dark:text-primary-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">Цвет</p>
-                    <p class="font-semibold text-gray-900 dark:text-white">
-                      {{ car.specifications.color }}
-                    </p>
-                  </div>
-                </div>
-
-                <div
-                  v-if="car.specifications.doors"
-                  class="flex items-center gap-3"
-                >
-                  <div
-                    class="w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center flex-shrink-0"
-                  >
-                    <svg
-                      class="w-5 h-5 text-primary-600 dark:text-primary-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">
-                      Дверей
-                    </p>
-                    <p class="font-semibold text-gray-900 dark:text-white">
-                      {{ car.specifications.doors }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Features - НЕ растягивается, естественная высота -->
-            <div
-              v-if="car.features && car.features.length > 0"
-              class="p-6 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800"
-            >
-              <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">
-                Особенности
-              </h2>
-              <div class="flex flex-wrap gap-2">
-                <span
-                  v-for="(feature, index) in car.features"
-                  :key="index"
-                  class="px-4 py-2 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 rounded-full text-sm font-semibold"
-                >
-                  {{ feature }}
-                </span>
               </div>
             </div>
 
@@ -422,19 +166,59 @@
         <div
           class="mt-12 p-8 bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-800"
         >
-          <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-            Отзывы
-            <span
-              v-if="reviews.length > 0"
-              class="text-gray-500 dark:text-gray-400"
-              >({{ reviews.length }})</span
+          <div class="flex items-center justify-between mb-8">
+            <h2 class="text-3xl font-bold text-gray-900 dark:text-white">
+              Отзывы
+              <span
+                v-if="car.comments?.length || 0 > 0"
+                class="text-gray-500 dark:text-gray-400"
+                >({{ car.comments?.length || 0 }})</span
+              >
+            </h2>
+
+            <!-- Add Review Button (только для авторизованных) -->
+            <button
+              v-if="isAuthenticated"
+              @click="openReviewModal"
+              class="btn-premium inline-flex items-center gap-2 py-3 px-6"
             >
-          </h2>
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+              <span>Оставить отзыв</span>
+            </button>
+          </div>
+
+          <!-- Login Prompt -->
+          <div
+            v-if="!isAuthenticated"
+            class="mb-8 p-6 bg-primary-50 dark:bg-primary-900/20 rounded-2xl text-center"
+          >
+            <p class="text-gray-700 dark:text-gray-300 mb-4">
+              Войдите, чтобы оставить отзыв
+            </p>
+            <router-link
+              to="/login"
+              class="btn-premium inline-flex items-center gap-2 py-3 px-6"
+            >
+              Войти
+            </router-link>
+          </div>
 
           <!-- Reviews List -->
-          <div v-if="reviews.length > 0" class="space-y-6">
+          <div v-if="car.comments?.length || 0 > 0" class="space-y-6">
             <div
-              v-for="review in reviews"
+              v-for="review in car.comments"
               :key="review.id"
               class="p-6 bg-gray-50 dark:bg-gray-800 rounded-2xl space-y-3"
             >
@@ -455,7 +239,7 @@
                       {{ review.userName }}
                     </p>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
-                      {{ formatDate(review.createdAt) }}
+                      {{ formatDate(review.created_On) }}
                     </p>
                   </div>
                 </div>
@@ -482,7 +266,7 @@
 
               <!-- Comment -->
               <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-                {{ review.comment }}
+                {{ review.content }}
               </p>
             </div>
           </div>
@@ -569,40 +353,46 @@
 
     <!-- Booking Modal -->
     <BookingModal
-      v-if="car && isModalOpen"
-      :is-open="isModalOpen"
+      v-if="car && isBookingModalOpen"
+      :is-open="isBookingModalOpen"
       :car="car"
       @close="closeBookingModal"
       @confirm="handleBookingConfirm"
+    />
+
+    <!-- Review Modal -->
+    <ReviewModal
+      v-if="car && isReviewModalOpen"
+      :is-open="isReviewModalOpen"
+      :car="car"
+      @close="closeReviewModal"
+      @submit="handleReviewSubmit"
+      ref="reviewModalRef"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import type { CarDetails } from "../types/Car";
-import type { Review } from "../types/Review";
+import { getCarDetails, createCarComment } from "../api/cars";
 import { createBooking } from "../api/booking";
 import { useToast } from "../composables/useToast";
+import { useAuth } from "../composables/useAuth";
 import BookingModal from "../components/BookingModal.vue";
+import ReviewModal from "../components/ReviewModal.vue";
 
 const route = useRoute();
 const router = useRouter();
 const { success, error } = useToast();
+const { isAuthenticated } = useAuth();
 
 const loading = ref(true);
 const car = ref<CarDetails | null>(null);
-const reviews = ref<Review[]>([]);
-const currentImageIndex = ref(0);
-const isModalOpen = ref(false);
-
-const currentImage = computed(() => {
-  if (car.value?.images && car.value.images.length > 0) {
-    return car.value.images[currentImageIndex.value];
-  }
-  return car.value?.imageUrl || "https://placehold.co/600x400?text=No+Image";
-});
+const isBookingModalOpen = ref(false);
+const isReviewModalOpen = ref(false);
+const reviewModalRef = ref<InstanceType<typeof ReviewModal> | null>(null);
 
 onMounted(async () => {
   const carId = Number(route.params.id);
@@ -612,103 +402,23 @@ onMounted(async () => {
   }
 
   await loadCarDetails(carId);
-  await loadReviews(carId);
 });
 
 async function loadCarDetails(id: number) {
   try {
-    // TODO: Заменить на реальный API вызов когда бэк будет готов
-    // const data = await getCarDetails(id);
-    // car.value = data;
+    const data = await getCarDetails(id);
 
-    // Временные моковые данные
-    car.value = {
-      id: id,
-      brand: "Mercedes-Benz",
-      model: "CLA45 S AMG 4Matic",
-      year: 2023,
-      priceHour: 48,
-      priceDay: 288,
-      imageUrl: "https://placehold.co/800x600?text=Mercedes+CLA45",
-      description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-      features: [
-        "Полный привод 4MATIC",
-        "Спортивные сиденья AMG",
-        "Панорамная крыша",
-        "Система навигации",
-        "Камера 360°",
-        "Адаптивный круиз-контроль",
-        "Подогрев сидений",
-        "Премиум аудиосистема",
-      ],
-      specifications: {
-        engine: "2.0L Turbo 421 л.с.",
-        transmission: "Автомат 8-ст. AMG",
-        fuelType: "Бензин",
-        seats: 5,
-        doors: 4,
-        color: "Черный металлик",
-        mileage: 15000,
-      },
-      images: [
-        "https://www.netcarshow.com/Mercedes-Benz-CLA45_S_AMG_4Matic-2020-Front_Three-Quarter.d21711f9.jpg?w=800&q=80", // Mercedes Front
-        "https://preview2.netcarshow.com/Mercedes-Benz-CLA45_S_AMG_4Matic-2020-Side_Profile.d21711f9.jpg?w=800&q=80", // Mercedes Side
-        "https://preview2.netcarshow.com/Mercedes-Benz-CLA45_S_AMG_4Matic-2020-Interior.d21711f9.jpg?w=800&q=80", // Mercedes Interior
-        "https://www.netcarshow.com/Mercedes-Benz-CLA45_S_AMG_4Matic-2020-Rear.d21711f9.jpg?w=800&q=80", // Mercedes Back
-      ],
-      averageRating: 4.8,
-      totalReviews: 24,
-    };
+    // Убедимся что comments это массив
+    if (!data.comments) {
+      data.comments = [];
+    }
+
+    car.value = data;
   } catch (e) {
     console.error("Ошибка загрузки деталей:", e);
     car.value = null;
   } finally {
     loading.value = false;
-  }
-}
-
-async function loadReviews(carId: number) {
-  try {
-    // TODO: Заменить на реальный API вызов
-    // const data = await getCarReviews(carId);
-    // reviews.value = data;
-
-    // Временные моковые отзывы
-    reviews.value = [
-      {
-        id: 1,
-        userId: 1,
-        userName: "Александр Иванов",
-        carId: carId,
-        rating: 5,
-        comment:
-          "Потрясающий автомобиль! Мощность, комфорт и стиль - всё на высшем уровне. Арендовал на выходные и получил массу удовольствия от вождения.",
-        createdAt: "2026-01-01T10:00:00Z",
-      },
-      {
-        id: 2,
-        userId: 2,
-        userName: "Елена Петрова",
-        carId: carId,
-        rating: 5,
-        comment:
-          "Отличный сервис и шикарная машина! Всё прошло гладко, автомобиль в идеальном состоянии. Обязательно арендую снова!",
-        createdAt: "2025-12-28T15:30:00Z",
-      },
-      {
-        id: 3,
-        userId: 3,
-        userName: "Дмитрий Сидоров",
-        carId: carId,
-        rating: 4,
-        comment:
-          "Очень хороший автомобиль, но цена немного высоковата. В остальном всё отлично - динамика, комфорт, технологии.",
-        createdAt: "2025-12-25T12:00:00Z",
-      },
-    ];
-  } catch (e) {
-    console.error("Ошибка загрузки отзывов:", e);
   }
 }
 
@@ -721,12 +431,13 @@ function formatDate(dateString: string): string {
   }).format(date);
 }
 
+// Booking Modal
 function openBookingModal() {
-  isModalOpen.value = true;
+  isBookingModalOpen.value = true;
 }
 
 function closeBookingModal() {
-  isModalOpen.value = false;
+  isBookingModalOpen.value = false;
 }
 
 async function handleBookingConfirm(startDate: string, endDate: string) {
@@ -739,6 +450,38 @@ async function handleBookingConfirm(startDate: string, endDate: string) {
   } catch (e) {
     console.error("Ошибка бронирования:", e);
     error("Ошибка бронирования. Попробуйте снова.");
+  }
+}
+
+// Review Modal
+function openReviewModal() {
+  isReviewModalOpen.value = true;
+}
+
+function closeReviewModal() {
+  isReviewModalOpen.value = false;
+}
+
+async function handleReviewSubmit(rating: number, content: string) {
+  if (!car.value) return;
+
+  try {
+    await createCarComment(car.value.id, content, rating);
+    success("Отзыв успешно добавлен!");
+
+    // Закрываем модальное окно
+    closeReviewModal();
+
+    // Перезагружаем детали машины чтобы увидеть новый отзыв
+    await loadCarDetails(car.value.id);
+  } catch (e: any) {
+    console.error("Ошибка добавления отзыва:", e);
+    error(e.response?.data?.message || "Не удалось добавить отзыв");
+  } finally {
+    // Reset submitting state in modal
+    if (reviewModalRef.value) {
+      reviewModalRef.value.setSubmitting(false);
+    }
   }
 }
 </script>
