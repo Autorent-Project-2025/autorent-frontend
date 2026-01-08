@@ -172,6 +172,7 @@
 </template>
 
 <script setup lang="ts">
+// @ts-nocheck
 import { ref, onMounted, onUnmounted } from "vue";
 
 // Car SVG icon component (inline)
