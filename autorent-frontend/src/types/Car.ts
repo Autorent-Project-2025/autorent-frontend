@@ -10,8 +10,23 @@ export interface Car {
   description: string | null;
 }
 
+// Спецификации автомобиля
+export interface CarSpecifications {
+  engine?: string;
+  transmission?: string;
+  fuelType?: string;
+  seats?: number;
+  doors?: number;
+  color?: string;
+  mileage?: number;
+}
+
 export interface CarDetails extends Car {
   comments: CarComment[];
+  // Дополнительные поля
+  images?: string[]; // Массив дополнительных изображений
+  features?: string[]; // Массив особенностей
+  specifications?: CarSpecifications; // Характеристики
 }
 
 export interface CarComment {

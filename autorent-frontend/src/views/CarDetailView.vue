@@ -44,105 +44,205 @@
         <div class="grid lg:grid-cols-2 gap-8">
           <!-- Left Column -->
           <div class="flex flex-col gap-6">
-            <!-- Main Image -->
+            <!-- Images Gallery -->
             <div class="space-y-4 flex-shrink-0">
+              <!-- Main Image -->
               <div
                 class="relative h-96 rounded-3xl overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-800 dark:to-gray-900 shadow-2xl"
               >
                 <img
-                  :src="
-                    car.imageUrl || 'https://placehold.co/800x600?text=No+Image'
-                  "
+                  :src="currentImage"
                   :alt="`${car.brand} ${car.model}`"
                   class="car-detail-main-image w-full h-full object-cover"
                 />
+
+                <!-- Image Navigation Dots -->
+                <div
+                  v-if="carImages.length > 1"
+                  class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2"
+                >
+                  <button
+                    v-for="(img, index) in carImages"
+                    :key="index"
+                    @click="currentImageIndex = index"
+                    :class="[
+                      'transition-all',
+                      currentImageIndex === index
+                        ? 'w-8 h-3 bg-white rounded-full'
+                        : 'w-3 h-3 bg-white/50 hover:bg-white/75 rounded-full',
+                    ]"
+                  ></button>
+                </div>
+              </div>
+
+              <!-- Thumbnail Gallery -->
+              <div v-if="carImages.length > 1" class="grid grid-cols-4 gap-3">
+                <button
+                  v-for="(img, index) in carImages.slice(0, 4)"
+                  :key="index"
+                  @click="currentImageIndex = index"
+                  :class="[
+                    'relative h-24 rounded-xl overflow-hidden transition-all',
+                    currentImageIndex === index
+                      ? 'ring-4 ring-primary-500 scale-105'
+                      : 'ring-2 ring-gray-200 dark:ring-gray-700 hover:ring-primary-300',
+                  ]"
+                >
+                  <img
+                    :src="img"
+                    :alt="`${car.brand} ${car.model} - фото ${index + 1}`"
+                    class="w-full h-full object-cover"
+                  />
+                </button>
               </div>
             </div>
 
             <!-- Description -->
             <div
-              v-if="car.description"
               class="p-6 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 flex flex-col flex-1"
             >
               <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-3">
                 Описание
               </h2>
               <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-                {{ car.description }}
+                {{
+                  car.description ||
+                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+                }}
               </p>
             </div>
           </div>
 
           <!-- Right Column -->
-          <div class="flex flex-col gap-6">
-            <!-- Title, Rating & Price -->
-            <div class="space-y-4">
-              <div class="flex items-start justify-between gap-4">
-                <div>
-                  <h1
-                    class="text-4xl font-extrabold text-gray-900 dark:text-white"
-                  >
-                    {{ car.brand }} {{ car.model }}
-                  </h1>
-                  <p class="text-lg text-gray-600 dark:text-gray-400 mt-1">
-                    {{ car.year }} год выпуска
-                  </p>
+          <div class="flex flex-col gap-6 h-full">
+            <!-- Top Content - будет расти, но не влиять на кнопку -->
+            <div class="space-y-6">
+              <!-- Title, Rating & Price -->
+              <div class="space-y-4">
+                <div class="flex items-start justify-between gap-4">
+                  <div>
+                    <h1
+                      class="text-4xl font-extrabold text-gray-900 dark:text-white"
+                    >
+                      {{ car.brand }} {{ car.model }}
+                    </h1>
+                    <p class="text-lg text-gray-600 dark:text-gray-400 mt-1">
+                      {{ car.year }} год выпуска
+                    </p>
+                  </div>
+
+                  <!-- Rating -->
+                  <div v-if="car.rating" class="flex flex-col items-end gap-1">
+                    <div class="flex items-center gap-2">
+                      <div class="flex items-center gap-1">
+                        <svg
+                          v-for="i in 5"
+                          :key="i"
+                          :class="[
+                            'w-5 h-5',
+                            i <= Math.round(car.rating)
+                              ? 'text-yellow-400 fill-current'
+                              : 'text-gray-300 dark:text-gray-600',
+                          ]"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                          />
+                        </svg>
+                      </div>
+                      <span
+                        class="text-2xl font-bold text-gray-900 dark:text-white"
+                      >
+                        {{ car.rating.toFixed(1) }}
+                      </span>
+                    </div>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                      {{ car.comments?.length || 0 }} отзывов
+                    </p>
+                  </div>
                 </div>
 
-                <!-- Rating -->
-                <div v-if="car.rating" class="flex flex-col items-end gap-1">
-                  <div class="flex items-center gap-2">
-                    <div class="flex items-center gap-1">
-                      <svg
-                        v-for="i in 5"
-                        :key="i"
-                        :class="[
-                          'w-5 h-5',
-                          i <= Math.round(car.rating)
-                            ? 'text-yellow-400 fill-current'
-                            : 'text-gray-300 dark:text-gray-600',
-                        ]"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                        />
-                      </svg>
-                    </div>
-                    <span
-                      class="text-2xl font-bold text-gray-900 dark:text-white"
-                    >
-                      {{ car.rating.toFixed(1) }}
-                    </span>
-                  </div>
-                  <p class="text-sm text-gray-500 dark:text-gray-400">
-                    {{ car.comments?.length || 0 }} отзывов
-                  </p>
+                <!-- Price -->
+                <div
+                  class="flex items-baseline gap-3 p-4 bg-primary-50 dark:bg-primary-900/20 rounded-xl"
+                >
+                  <span
+                    class="text-4xl font-extrabold text-primary-600 dark:text-primary-400"
+                  >
+                    ${{ car.priceHour }}
+                  </span>
+                  <span class="text-lg text-gray-700 dark:text-gray-300"
+                    >/час</span
+                  >
+                  <span class="text-gray-500 dark:text-gray-400 ml-4"
+                    >или ${{ car.priceDay }}/день</span
+                  >
                 </div>
               </div>
 
-              <!-- Price -->
+              <!-- Specifications -->
               <div
-                class="flex items-baseline gap-3 p-4 bg-primary-50 dark:bg-primary-900/20 rounded-xl"
+                v-if="specifications.length > 0"
+                class="p-6 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800"
               >
-                <span
-                  class="text-4xl font-extrabold text-primary-600 dark:text-primary-400"
+                <h2
+                  class="text-xl font-bold text-gray-900 dark:text-white mb-4"
                 >
-                  ${{ car.priceHour }}
-                </span>
-                <span class="text-lg text-gray-700 dark:text-gray-300"
-                  >/час</span
+                  Характеристики
+                </h2>
+                <div class="grid grid-cols-2 gap-x-4 gap-y-5">
+                  <div
+                    v-for="spec in specifications"
+                    :key="spec.label"
+                    class="flex items-center gap-3"
+                  >
+                    <div
+                      class="w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center flex-shrink-0"
+                    >
+                      <component
+                        :is="spec.icon"
+                        class="w-5 h-5 text-primary-600 dark:text-primary-400"
+                      />
+                    </div>
+                    <div>
+                      <p class="text-xs text-gray-500 dark:text-gray-400">
+                        {{ spec.label }}
+                      </p>
+                      <p class="font-semibold text-gray-900 dark:text-white">
+                        {{ spec.value }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Features -->
+              <div
+                v-if="features.length > 0"
+                class="p-6 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800"
+              >
+                <h2
+                  class="text-xl font-bold text-gray-900 dark:text-white mb-4"
                 >
-                <span class="text-gray-500 dark:text-gray-400 ml-4"
-                  >или ${{ car.priceDay }}/день</span
-                >
+                  Особенности
+                </h2>
+                <div class="flex flex-wrap gap-2">
+                  <span
+                    v-for="(feature, index) in features"
+                    :key="index"
+                    class="px-4 py-2 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 rounded-full text-sm font-semibold"
+                  >
+                    {{ feature }}
+                  </span>
+                </div>
               </div>
             </div>
 
-            <!-- Book Button -->
+            <!-- Book Button - прижата к низу -->
             <button
               @click="openBookingModal"
-              class="w-full btn-premium py-5 text-lg"
+              class="w-full btn-premium py-5 text-lg mt-auto"
             >
               <span>Забронировать автомобиль</span>
               <svg
@@ -373,7 +473,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed, h } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import type { CarDetails } from "../types/Car";
 import { getCarDetails, createCarComment } from "../api/cars";
@@ -393,6 +493,198 @@ const car = ref<CarDetails | null>(null);
 const isBookingModalOpen = ref(false);
 const isReviewModalOpen = ref(false);
 const reviewModalRef = ref<InstanceType<typeof ReviewModal> | null>(null);
+const currentImageIndex = ref(0);
+
+// Дефолтные изображения для галереи (если нет других фото)
+const defaultCarImages = [
+  "https://www.netcarshow.com/Mercedes-Benz-CLA45_S_AMG_4Matic-2020-Front_Three-Quarter.d21711f9.jpg?w=800&q=80", // Mercedes Front
+  "https://preview2.netcarshow.com/Mercedes-Benz-CLA45_S_AMG_4Matic-2020-Side_Profile.d21711f9.jpg?w=800&q=80", // Mercedes Side
+  "https://preview2.netcarshow.com/Mercedes-Benz-CLA45_S_AMG_4Matic-2020-Interior.d21711f9.jpg?w=800&q=80", // Mercedes Interior
+  "https://www.netcarshow.com/Mercedes-Benz-CLA45_S_AMG_4Matic-2020-Rear.d21711f9.jpg?w=800&q=80", // Mercedes Back
+];
+
+// Вычисляемое свойство для массива изображений
+const carImages = computed(() => {
+  if (!car.value) return defaultCarImages;
+
+  // Если есть imageUrl от бэка, используем его как основное фото
+  const images = [];
+  if (car.value.imageUrl) {
+    images.push(car.value.imageUrl);
+  }
+
+  // Добавляем дефолтные изображения для галереи
+  images.push(...defaultCarImages.slice(0, 3));
+
+  return images;
+});
+
+// Текущее отображаемое изображение
+const currentImage = computed(() => {
+  return carImages.value[currentImageIndex.value];
+});
+
+// Дефолтные характеристики для всех машин
+const defaultSpecifications = [
+  {
+    label: "Двигатель",
+    value: "2.0L Turbo",
+    icon: () =>
+      h(
+        "svg",
+        {
+          class: "w-5 h-5",
+          fill: "none",
+          stroke: "currentColor",
+          viewBox: "0 0 24 24",
+        },
+        [
+          h("path", {
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round",
+            "stroke-width": "2",
+            d: "M13 10V3L4 14h7v7l9-11h-7z",
+          }),
+        ]
+      ),
+  },
+  {
+    label: "Коробка передач",
+    value: "Автомат",
+    icon: () =>
+      h(
+        "svg",
+        {
+          class: "w-5 h-5",
+          fill: "none",
+          stroke: "currentColor",
+          viewBox: "0 0 24 24",
+        },
+        [
+          h("path", {
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round",
+            "stroke-width": "2",
+            d: "M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15",
+          }),
+        ]
+      ),
+  },
+  {
+    label: "Мест",
+    value: "5",
+    icon: () =>
+      h(
+        "svg",
+        {
+          class: "w-5 h-5",
+          fill: "none",
+          stroke: "currentColor",
+          viewBox: "0 0 24 24",
+        },
+        [
+          h("path", {
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round",
+            "stroke-width": "2",
+            d: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z",
+          }),
+        ]
+      ),
+  },
+  {
+    label: "Топливо",
+    value: "Бензин",
+    icon: () =>
+      h(
+        "svg",
+        {
+          class: "w-5 h-5",
+          fill: "none",
+          stroke: "currentColor",
+          viewBox: "0 0 24 24",
+        },
+        [
+          h("path", {
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round",
+            "stroke-width": "2",
+            d: "M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z",
+          }),
+        ]
+      ),
+  },
+  {
+    label: "Цвет",
+    value: "Черный",
+    icon: () =>
+      h(
+        "svg",
+        {
+          class: "w-5 h-5",
+          fill: "none",
+          stroke: "currentColor",
+          viewBox: "0 0 24 24",
+        },
+        [
+          h("path", {
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round",
+            "stroke-width": "2",
+            d: "M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01",
+          }),
+        ]
+      ),
+  },
+  {
+    label: "Дверей",
+    value: "4",
+    icon: () =>
+      h(
+        "svg",
+        {
+          class: "w-5 h-5",
+          fill: "none",
+          stroke: "currentColor",
+          viewBox: "0 0 24 24",
+        },
+        [
+          h("path", {
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round",
+            "stroke-width": "2",
+            d: "M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4",
+          }),
+        ]
+      ),
+  },
+];
+
+// Вычисляемое свойство для характеристик
+const specifications = computed(() => {
+  // В будущем можно будет получать характеристики с бэка
+  // Пока возвращаем дефолтные
+  return defaultSpecifications;
+});
+
+// Дефолтные особенности
+const defaultFeatures = [
+  "Кондиционер",
+  "Круиз-контроль",
+  "Bluetooth",
+  "USB порты",
+  "Камера заднего вида",
+  "Парктроник",
+  "Подогрев сидений",
+  "Мультимедиа система",
+];
+
+// Вычисляемое свойство для особенностей
+const features = computed(() => {
+  // В будущем можно будет получать особенности с бэка
+  // Пока возвращаем дефолтные
+  return defaultFeatures;
+});
 
 onMounted(async () => {
   const carId = Number(route.params.id);
