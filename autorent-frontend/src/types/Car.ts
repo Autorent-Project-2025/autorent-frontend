@@ -6,21 +6,42 @@ export interface Car {
   priceHour: number | null;
   priceDay: number | null;
   imageUrl: string | null;
+  rating: number | null;
+  description: string | null;
 }
-// for morph effect purposes
+
+// Спецификации автомобиля
+export interface CarSpecifications {
+  engine?: string;
+  transmission?: string;
+  fuelType?: string;
+  seats?: number;
+  doors?: number;
+  color?: string;
+  mileage?: number;
+}
+
 export interface CarDetails extends Car {
-  description?: string;
-  features?: string[];
-  specifications?: {
-    engine?: string;
-    transmission?: string;
-    fuelType?: string;
-    seats?: number;
-    doors?: number;
-    color?: string;
-    mileage?: number;
-  };
-  images?: string[];
-  averageRating?: number;
-  totalReviews?: number;
+  comments: CarComment[];
+  // Дополнительные поля
+  images?: string[]; // Массив дополнительных изображений
+  features?: string[]; // Массив особенностей
+  specifications?: CarSpecifications; // Характеристики
+}
+
+export interface CarComment {
+  id: number;
+  userId: number;
+  userName: string;
+  carId: number;
+  content: string;
+  rating: number;
+  created_On: string; // После camelCase преобразования будет created_On
+}
+
+// Для создания комментария
+export interface CreateCommentDto {
+  carId: number;
+  content: string;
+  rating: number;
 }
