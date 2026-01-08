@@ -1,5 +1,7 @@
 <template>
-  <div class="relative min-h-screen overflow-hidden bg-gradient-dark">
+  <div
+    class="relative min-h-screen overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950"
+  >
     <!-- Hero Section -->
     <section
       class="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8"
@@ -12,14 +14,16 @@
               <h1
                 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-tight"
               >
-                <span class="text-white">Самый простой</span>
+                <span class="text-gray-900 dark:text-white">Самый простой</span>
                 <br />
                 <span class="text-gradient-primary">способ арендовать</span>
                 <br />
-                <span class="text-white">автомобиль</span>
+                <span class="text-gray-900 dark:text-white">автомобиль</span>
               </h1>
 
-              <p class="text-lg sm:text-xl text-gray-300 max-w-2xl">
+              <p
+                class="text-lg sm:text-xl text-gray-700 dark:text-gray-300 max-w-2xl"
+              >
                 Бесшовная, полностью цифровая аренда с проверенным автопарком
                 внедорожников, премиальных и бизнес-автомобилей. Арендуйте от 1
                 до 365 дней — без хлопот, максимум комфорта.
@@ -27,11 +31,11 @@
             </div>
 
             <!-- Stats -->
-            <div class="flex flex-wrap gap-8 text-white">
+            <div class="flex flex-wrap gap-8 text-gray-900 dark:text-white">
               <div class="space-y-1">
                 <div class="flex items-center gap-2">
                   <svg
-                    class="w-6 h-6 text-primary-400"
+                    class="w-6 h-6 text-primary-500 dark:text-primary-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -45,13 +49,15 @@
                   </svg>
                   <p class="text-3xl font-bold">200+</p>
                 </div>
-                <p class="text-gray-400 text-sm">автомобилей</p>
+                <p class="text-gray-600 dark:text-gray-400 text-sm">
+                  автомобилей
+                </p>
               </div>
 
               <div class="space-y-1">
                 <div class="flex items-center gap-2">
                   <svg
-                    class="w-6 h-6 text-primary-400"
+                    class="w-6 h-6 text-primary-500 dark:text-primary-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -65,18 +71,20 @@
                   </svg>
                   <p class="text-3xl font-bold">15</p>
                 </div>
-                <p class="text-gray-400 text-sm">брендов</p>
+                <p class="text-gray-600 dark:text-gray-400 text-sm">брендов</p>
               </div>
             </div>
 
             <!-- Features -->
             <div class="space-y-3">
-              <div class="flex items-center gap-3 text-gray-200">
+              <div
+                class="flex items-center gap-3 text-gray-800 dark:text-gray-200"
+              >
                 <div
-                  class="w-8 h-8 rounded-full bg-primary-500/20 flex items-center justify-center"
+                  class="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-500/20 flex items-center justify-center"
                 >
                   <svg
-                    class="w-5 h-5 text-primary-400"
+                    class="w-5 h-5 text-primary-600 dark:text-primary-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -92,12 +100,14 @@
                 <p class="font-medium">Гибкие условия аренды</p>
               </div>
 
-              <div class="flex items-center gap-3 text-gray-200">
+              <div
+                class="flex items-center gap-3 text-gray-800 dark:text-gray-200"
+              >
                 <div
-                  class="w-8 h-8 rounded-full bg-primary-500/20 flex items-center justify-center"
+                  class="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-500/20 flex items-center justify-center"
                 >
                   <svg
-                    class="w-5 h-5 text-primary-400"
+                    class="w-5 h-5 text-primary-600 dark:text-primary-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -113,12 +123,14 @@
                 <p class="font-medium">Полная страховка</p>
               </div>
 
-              <div class="flex items-center gap-3 text-gray-200">
+              <div
+                class="flex items-center gap-3 text-gray-800 dark:text-gray-200"
+              >
                 <div
-                  class="w-8 h-8 rounded-full bg-primary-500/20 flex items-center justify-center"
+                  class="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-500/20 flex items-center justify-center"
                 >
                   <svg
-                    class="w-5 h-5 text-primary-400"
+                    class="w-5 h-5 text-primary-600 dark:text-primary-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -165,27 +177,35 @@
               <!-- Brand Logos -->
               <div class="absolute inset-0">
                 <div
-                  class="absolute top-10 right-20 w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center animate-float"
+                  class="absolute top-10 right-20 w-16 h-16 rounded-2xl bg-white/60 dark:bg-white/10 backdrop-blur-sm flex items-center justify-center animate-float shadow-lg"
                 >
-                  <span class="text-2xl font-bold text-white">M</span>
+                  <span class="text-2xl font-bold text-gray-900 dark:text-white"
+                    >M</span
+                  >
                 </div>
                 <div
-                  class="absolute top-40 right-10 w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center animate-float"
+                  class="absolute top-40 right-10 w-16 h-16 rounded-2xl bg-white/60 dark:bg-white/10 backdrop-blur-sm flex items-center justify-center animate-float shadow-lg"
                   style="animation-delay: 0.5s"
                 >
-                  <span class="text-2xl font-bold text-white">N</span>
+                  <span class="text-2xl font-bold text-gray-900 dark:text-white"
+                    >N</span
+                  >
                 </div>
                 <div
-                  class="absolute bottom-40 right-32 w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center animate-float"
+                  class="absolute bottom-40 right-32 w-16 h-16 rounded-2xl bg-white/60 dark:bg-white/10 backdrop-blur-sm flex items-center justify-center animate-float shadow-lg"
                   style="animation-delay: 1s"
                 >
-                  <span class="text-2xl font-bold text-white">P</span>
+                  <span class="text-2xl font-bold text-gray-900 dark:text-white"
+                    >P</span
+                  >
                 </div>
                 <div
-                  class="absolute bottom-20 right-10 w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center animate-float"
+                  class="absolute bottom-20 right-10 w-16 h-16 rounded-2xl bg-white/60 dark:bg-white/10 backdrop-blur-sm flex items-center justify-center animate-float shadow-lg"
                   style="animation-delay: 1.5s"
                 >
-                  <span class="text-2xl font-bold text-white">T</span>
+                  <span class="text-2xl font-bold text-gray-900 dark:text-white"
+                    >T</span
+                  >
                 </div>
               </div>
 
@@ -199,20 +219,22 @@
 
     <!-- Features Section -->
     <section
-      class="relative py-20 px-4 sm:px-6 lg:px-8 bg-white/5 backdrop-blur-sm"
+      class="relative py-20 px-4 sm:px-6 lg:px-8 bg-white/50 dark:bg-white/5 backdrop-blur-sm"
     >
       <div class="max-w-7xl mx-auto">
-        <h2 class="text-3xl sm:text-4xl font-bold text-center text-white mb-16">
+        <h2
+          class="text-3xl sm:text-4xl font-bold text-center text-gray-900 dark:text-white mb-16"
+        >
           Почему выбирают нас
         </h2>
 
         <div class="grid md:grid-cols-3 gap-8">
           <div class="glass p-8 rounded-2xl space-y-4 card-hover">
             <div
-              class="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center"
+              class="w-12 h-12 rounded-xl bg-primary-100 dark:bg-primary-500/20 flex items-center justify-center"
             >
               <svg
-                class="w-6 h-6 text-primary-400"
+                class="w-6 h-6 text-primary-600 dark:text-primary-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -225,8 +247,10 @@
                 />
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-white">Онлайн бронирование</h3>
-            <p class="text-gray-300">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+              Онлайн бронирование
+            </h3>
+            <p class="text-gray-700 dark:text-gray-300">
               Забронируйте автомобиль за пару кликов через наше приложение или
               веб-сайт
             </p>
@@ -234,10 +258,10 @@
 
           <div class="glass p-8 rounded-2xl space-y-4 card-hover">
             <div
-              class="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center"
+              class="w-12 h-12 rounded-xl bg-primary-100 dark:bg-primary-500/20 flex items-center justify-center"
             >
               <svg
-                class="w-6 h-6 text-primary-400"
+                class="w-6 h-6 text-primary-600 dark:text-primary-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -256,18 +280,20 @@
                 />
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-white">Доставка в любую точку</h3>
-            <p class="text-gray-300">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+              Доставка в любую точку
+            </h3>
+            <p class="text-gray-700 dark:text-gray-300">
               Мы доставим автомобиль туда, где вам удобно, в любое время
             </p>
           </div>
 
           <div class="glass p-8 rounded-2xl space-y-4 card-hover">
             <div
-              class="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center"
+              class="w-12 h-12 rounded-xl bg-primary-100 dark:bg-primary-500/20 flex items-center justify-center"
             >
               <svg
-                class="w-6 h-6 text-primary-400"
+                class="w-6 h-6 text-primary-600 dark:text-primary-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -280,8 +306,10 @@
                 />
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-white">Полная страховка</h3>
-            <p class="text-gray-300">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+              Полная страховка
+            </h3>
+            <p class="text-gray-700 dark:text-gray-300">
               Все автомобили застрахованы, арендуйте с уверенностью
             </p>
           </div>

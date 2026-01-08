@@ -22,18 +22,19 @@
         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
       >
         <div
-          v-for="car in cars"
+          v-for="car in carsWithStatus"
           :key="car.id"
-          class="group relative bg-white dark:bg-gray-900 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 card-hover border border-gray-200 dark:border-gray-800"
+          class="group relative bg-white dark:bg-gray-900 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 card-hover border border-gray-200 dark:border-gray-800 flex flex-col"
+          :class="{ 'opacity-75': !car.isAvailable }"
         >
           <!-- Image Container -->
           <div
-            class="relative h-64 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900"
+            class="relative h-64 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 flex-shrink-0"
           >
             <img
               :src="car.imageUrl || config.app.defaultCarImage"
               :alt="`${car.brand} ${car.model}`"
-              class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+              class="car-card-image w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
             />
 
             <!-- Gradient Overlay -->
@@ -61,14 +62,26 @@
                 car.year
               }}</span>
             </div>
+
+            <!-- Unavailable Overlay -->
+            <div
+              v-if="!car.isAvailable"
+              class="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center"
+            >
+              <div
+                class="bg-red-600 text-white px-6 py-3 rounded-full font-bold text-sm shadow-lg"
+              >
+                Забронирован
+              </div>
+            </div>
           </div>
 
           <!-- Content -->
-          <div class="p-6 space-y-6">
+          <div class="p-6 flex flex-col flex-1">
             <!-- Car Info -->
-            <div class="space-y-2">
+            <div class="mb-4">
               <h3
-                class="text-2xl font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"
+                class="text-2xl font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors mb-2"
               >
                 {{ car.brand }} {{ car.model }}
               </h3>
@@ -77,34 +90,38 @@
               </p>
             </div>
 
-            <!-- Features (if available) -->
-            <div class="flex flex-wrap gap-2">
+            <!-- Features -->
+            <div class="flex flex-wrap gap-2 mb-6">
               <span
                 class="px-3 py-1 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 text-xs font-semibold rounded-full"
               >
                 Премиум
               </span>
               <span
-                class="px-3 py-1 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 text-xs font-semibold rounded-full"
+                :class="
+                  car.isAvailable
+                    ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300'
+                    : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300'
+                "
+                class="px-3 py-1 text-xs font-semibold rounded-full"
               >
-                Доступен
+                {{ car.isAvailable ? "Доступен" : "Забронирован" }}
               </span>
             </div>
 
-            <!-- Book Button -->
-            <button
-              @click="book(car.id)"
-              :disabled="bookingInProgress"
-              class="w-full relative overflow-hidden bg-primary-600 hover:bg-primary-700 disabled:bg-gray-400 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 hover:shadow-xl hover:shadow-primary-500/50 active:scale-95 disabled:cursor-not-allowed disabled:hover:shadow-none group/btn"
-            >
-              <span
-                class="relative z-10 flex items-center justify-center gap-2"
+            <!-- Spacer -->
+            <div class="flex-1"></div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-3">
+              <!-- View Details Button -->
+              <router-link
+                :to="`/cars/${car.id}`"
+                class="flex-1 px-6 py-4 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-white font-bold rounded-2xl transition-all hover:shadow-lg active:scale-95 flex items-center justify-center gap-2"
               >
-                <span v-if="!bookingInProgress">Забронировать</span>
-                <span v-else>Бронирование...</span>
+                <span>Подробнее</span>
                 <svg
-                  v-if="!bookingInProgress"
-                  class="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform"
+                  class="w-5 h-5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -113,20 +130,50 @@
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-              </span>
+              </router-link>
 
-              <!-- Shimmer effect -->
-              <div
-                class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700"
-              ></div>
-            </button>
+              <!-- Book Button -->
+              <button
+                @click="openBookingModal(car)"
+                :disabled="!car.isAvailable"
+                class="flex-1 relative overflow-hidden bg-primary-600 hover:bg-primary-700 disabled:bg-gray-400 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 hover:shadow-xl hover:shadow-primary-500/50 active:scale-95 disabled:cursor-not-allowed disabled:hover:shadow-none group/btn"
+              >
+                <span
+                  class="relative z-10 flex items-center justify-center gap-2"
+                >
+                  <span v-if="car.isAvailable">Забронировать</span>
+                  <span v-else>Недоступен</span>
+                  <svg
+                    v-if="car.isAvailable"
+                    class="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
+                  </svg>
+                </span>
+
+                <!-- Shimmer effect -->
+                <div
+                  v-if="car.isAvailable"
+                  class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700"
+                ></div>
+              </button>
+            </div>
           </div>
 
           <!-- Glow Effect on Hover -->
           <div
+            v-if="car.isAvailable"
             class="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
             style="box-shadow: 0 0 40px rgba(59, 130, 246, 0.3)"
           ></div>
@@ -150,45 +197,146 @@
         </div>
       </div>
     </div>
+
+    <!-- Booking Modal -->
+    <BookingModal
+      v-if="selectedCar"
+      :is-open="isModalOpen"
+      :car="selectedCar"
+      @close="closeBookingModal"
+      @confirm="handleBookingConfirm"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { getCars } from "../api/cars";
-import { createBooking } from "../api/booking";
+import { createBooking, getCarBookings } from "../api/booking";
 import type { Car } from "../types/Car";
+import type { Booking } from "../types/Booking";
 import { config } from "../config";
 import { useToast } from "../composables/useToast";
+import { isCarAvailable } from "../utils/bookingUtils";
+import BookingModal from "../components/BookingModal.vue";
+
+interface CarWithStatus extends Car {
+  isAvailable: boolean;
+  bookings: Booking[];
+}
 
 const cars = ref<Car[]>([]);
-const bookingInProgress = ref(false);
+const carBookings = ref<Record<number, Booking[]>>({});
+const selectedCar = ref<Car | null>(null);
+const isModalOpen = ref(false);
 const { success, error } = useToast();
 
+// Вычисляем машины со статусом доступности
+const carsWithStatus = computed<CarWithStatus[]>(() => {
+  return cars.value.map((car) => {
+    const bookings = carBookings.value[car.id] || [];
+    const now = new Date();
+
+    // Проверяем доступность на текущий момент
+    const available = isCarAvailable(
+      bookings,
+      now,
+      new Date(now.getTime() + 1000)
+    );
+
+    return {
+      ...car,
+      isAvailable: available,
+      bookings,
+    };
+  });
+});
+
 onMounted(async () => {
+  await loadCars();
+});
+
+async function loadCars() {
   try {
     cars.value = await getCars();
+
+    // Загружаем бронирования для каждой машины
+    await loadAllCarBookings();
   } catch (e) {
     console.error("Ошибка при загрузке авто:", e);
     error("Не удалось загрузить список автомобилей");
   }
-});
+}
 
-async function book(id: number) {
-  if (bookingInProgress.value) return;
+async function loadAllCarBookings() {
+  try {
+    const bookingsPromises = cars.value.map(async (car) => {
+      try {
+        const bookings = await getCarBookings(car.id);
+        return { carId: car.id, bookings };
+      } catch (e) {
+        console.error(`Ошибка загрузки бронирований для машины ${car.id}:`, e);
+        return { carId: car.id, bookings: [] };
+      }
+    });
 
-  bookingInProgress.value = true;
-  const start = new Date().toISOString();
-  const hoursToAdd = config.booking.defaultDurationHours;
-  const end = new Date(Date.now() + hoursToAdd * 60 * 60 * 1000).toISOString();
+    const results = await Promise.all(bookingsPromises);
+
+    const bookingsMap: Record<number, Booking[]> = {};
+    results.forEach((result) => {
+      bookingsMap[result.carId] = result.bookings;
+    });
+
+    carBookings.value = bookingsMap;
+  } catch (e) {
+    console.error("Ошибка при загрузке бронирований:", e);
+  }
+}
+
+function openBookingModal(car: CarWithStatus) {
+  if (!car.isAvailable) {
+    error("Этот автомобиль сейчас забронирован");
+    return;
+  }
+
+  selectedCar.value = car;
+  isModalOpen.value = true;
+}
+
+function closeBookingModal() {
+  isModalOpen.value = false;
+  setTimeout(() => {
+    selectedCar.value = null;
+  }, 300);
+}
+
+async function handleBookingConfirm(startDate: string, endDate: string) {
+  if (!selectedCar.value) return;
+
+  const carId = selectedCar.value.id;
+  const bookings = carBookings.value[carId] || [];
+
+  // Проверяем доступность на выбранный период
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  if (!isCarAvailable(bookings, start, end)) {
+    error("Этот автомобиль уже забронирован на выбранный период");
+    return;
+  }
 
   try {
-    await createBooking(id, start, end);
-    success("Автомобиль успешно забронирован!");
+    await createBooking(carId, startDate, endDate);
+    success(
+      `${selectedCar.value.brand} ${selectedCar.value.model} успешно забронирован!`
+    );
+    closeBookingModal();
+
+    // Перезагружаем бронирования для обновления статуса
+    await loadAllCarBookings();
   } catch (e) {
+    console.error("Ошибка бронирования:", e);
     error("Ошибка бронирования. Попробуйте снова.");
-  } finally {
-    bookingInProgress.value = false;
   }
 }
 </script>
