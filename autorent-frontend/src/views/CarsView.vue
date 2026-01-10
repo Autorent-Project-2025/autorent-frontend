@@ -206,30 +206,43 @@
       @close="closeBookingModal"
       @confirm="handleBookingConfirm"
     />
+
+    <!-- Login Required Modal -->
+    <LoginRequiredModal
+      :is-open="showLoginModal"
+      @close="showLoginModal = false"
+      @login="goToLogin"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
 import { getCars } from "../api/cars";
 import { createBooking, getCarBookings } from "../api/booking";
 import type { Car } from "../types/Car";
 import type { Booking } from "../types/Booking";
 import { config } from "../config";
 import { useToast } from "../composables/useToast";
+import { useAuth } from "../composables/useAuth";
 import { isCarAvailable } from "../utils/bookingUtils";
 import BookingModal from "../components/BookingModal.vue";
+import LoginRequiredModal from "../components/LoginRequiredModal.vue";
 
 interface CarWithStatus extends Car {
   isAvailable: boolean;
   bookings: Booking[];
 }
 
+const router = useRouter();
 const cars = ref<Car[]>([]);
 const carBookings = ref<Record<number, Booking[]>>({});
 const selectedCar = ref<Car | null>(null);
 const isModalOpen = ref(false);
+const showLoginModal = ref(false);
 const { success, error } = useToast();
+const { isAuthenticated } = useAuth();
 
 // Вычисляем машины со статусом доступности
 const carsWithStatus = computed<CarWithStatus[]>(() => {
@@ -294,6 +307,12 @@ async function loadAllCarBookings() {
 }
 
 function openBookingModal(car: CarWithStatus) {
+  // Проверяем авторизацию перед бронированием
+  if (!isAuthenticated.value) {
+    showLoginModal.value = true;
+    return;
+  }
+
   if (!car.isAvailable) {
     error("Этот автомобиль сейчас забронирован");
     return;
@@ -308,6 +327,11 @@ function closeBookingModal() {
   setTimeout(() => {
     selectedCar.value = null;
   }, 300);
+}
+
+function goToLogin() {
+  showLoginModal.value = false;
+  router.push("/login");
 }
 
 async function handleBookingConfirm(startDate: string, endDate: string) {

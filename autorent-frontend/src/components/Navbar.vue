@@ -46,7 +46,9 @@
               ></span>
             </router-link>
 
+            <!-- Мои бронирования - только для авторизованных -->
             <router-link
+              v-if="isAuthenticated"
               to="/bookings"
               active-class="text-primary-600 dark:text-primary-400"
               class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors relative group"
@@ -65,7 +67,7 @@
           <ThemeToggle />
 
           <!-- Auth Buttons -->
-          <div v-if="!token">
+          <div v-if="!isAuthenticated">
             <button
               @click="$router.push('/login')"
               class="px-6 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-primary-500/50 active:scale-95"
@@ -151,7 +153,10 @@
           >
             Автомобили
           </router-link>
+
+          <!-- Мои бронирования - только для авторизованных -->
           <router-link
+            v-if="isAuthenticated"
             to="/bookings"
             active-class="bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400"
             class="block px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium transition-colors"
@@ -172,7 +177,13 @@ import { auth } from "../store/auth";
 import ThemeToggle from "./ThemeToggle.vue";
 
 const router = useRouter();
-const token = computed(() => auth.token);
+const isAuthenticated = computed(() => {
+  // Проверяем валидность токена
+  if (auth.token) {
+    return auth.checkTokenValidity();
+  }
+  return false;
+});
 const scrolled = ref(false);
 const mobileMenuOpen = ref(false);
 
@@ -188,6 +199,9 @@ const handleScroll = () => {
 
 onMounted(() => {
   window.addEventListener("scroll", handleScroll);
+
+  // Проверяем токен при монтировании компонента
+  auth.checkTokenValidity();
 });
 
 onUnmounted(() => {
