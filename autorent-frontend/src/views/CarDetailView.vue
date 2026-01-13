@@ -51,10 +51,17 @@
                 class="relative h-96 rounded-3xl overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-800 dark:to-gray-900 shadow-2xl"
               >
                 <img
+                  v-if="currentImage"
                   :src="currentImage"
                   :alt="`${car.brand} ${car.model}`"
                   class="car-detail-main-image w-full h-full object-cover"
                 />
+                <div
+                  v-else
+                  class="w-full h-full flex items-center justify-center text-gray-500 dark:text-gray-400"
+                >
+                  Нет изображения
+                </div>
 
                 <!-- Image Navigation Dots -->
                 <div
@@ -105,10 +112,7 @@
                 Описание
               </h2>
               <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-                {{
-                  car.description ||
-                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s."
-                }}
+                {{ car.description || "Нет описания доступно." }}
               </p>
             </div>
           </div>
@@ -160,13 +164,13 @@
                   <span
                     class="text-4xl font-extrabold text-primary-600 dark:text-primary-400"
                   >
-                    ${{ car.priceHour }}
+                    ${{ car.priceHour ?? "N/A" }}
                   </span>
                   <span class="text-lg text-gray-700 dark:text-gray-300"
                     >/час</span
                   >
                   <span class="text-gray-500 dark:text-gray-400 ml-4"
-                    >или ${{ car.priceDay }}/день</span
+                    >или ${{ car.priceDay ?? "N/A" }}/день</span
                   >
                 </div>
               </div>
@@ -321,16 +325,12 @@
                     <span
                       class="text-lg font-bold text-primary-600 dark:text-primary-400"
                     >
-                      {{
-                        review.username
-                          ? review.username.charAt(0).toUpperCase()
-                          : review.userName.charAt(0).toUpperCase()
-                      }}
+                      {{ review.userName.charAt(0).toUpperCase() }}
                     </span>
                   </div>
                   <div>
                     <p class="font-semibold text-gray-900 dark:text-white">
-                      {{ review.username || review.userName }}
+                      {{ review.userName }}
                     </p>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
                       {{ formatDate(review.created_On) }}
@@ -508,180 +508,187 @@ const totalCommentPages = computed(() =>
   Math.ceil(totalComments.value / commentPageSize.value)
 );
 
-// Дефолтные изображения для галереи
-const defaultCarImages = [
-  "https://www.netcarshow.com/Mercedes-Benz-CLA45_S_AMG_4Matic-2020-Front_Three-Quarter.d21711f9.jpg?w=800&q=80",
-  "https://preview2.netcarshow.com/Mercedes-Benz-CLA45_S_AMG_4Matic-2020-Side_Profile.d21711f9.jpg?w=800&q=80",
-  "https://preview2.netcarshow.com/Mercedes-Benz-CLA45_S_AMG_4Matic-2020-Interior.d21711f9.jpg?w=800&q=80",
-  "https://www.netcarshow.com/Mercedes-Benz-CLA45_S_AMG_4Matic-2020-Rear.d21711f9.jpg?w=800&q=80",
-];
-
 const carImages = computed(() => {
-  if (!car.value) return defaultCarImages;
-
-  const images = [];
-  if (car.value.imageUrl) {
+  const images: string[] = [];
+  if (car.value?.imageUrl) {
     images.push(car.value.imageUrl);
   }
-
-  images.push(...defaultCarImages.slice(0, 3));
+  if (car.value?.images) {
+    images.push(...car.value.images);
+  }
   return images;
 });
 
 const currentImage = computed(() => {
-  return carImages.value[currentImageIndex.value];
+  return carImages.value[currentImageIndex.value] || "";
 });
 
-// Дефолтные характеристики
-const defaultSpecifications = [
-  {
-    label: "Двигатель",
-    value: "2.0L Turbo",
-    icon: () =>
-      h(
-        "svg",
-        {
-          class: "w-5 h-5",
-          fill: "none",
-          stroke: "currentColor",
-          viewBox: "0 0 24 24",
-        },
-        [
-          h("path", {
-            "stroke-linecap": "round",
-            "stroke-linejoin": "round",
-            "stroke-width": "2",
-            d: "M13 10V3L4 14h7v7l9-11h-7z",
-          }),
-        ]
-      ),
-  },
-  {
-    label: "Коробка передач",
-    value: "Автомат",
-    icon: () =>
-      h(
-        "svg",
-        {
-          class: "w-5 h-5",
-          fill: "none",
-          stroke: "currentColor",
-          viewBox: "0 0 24 24",
-        },
-        [
-          h("path", {
-            "stroke-linecap": "round",
-            "stroke-linejoin": "round",
-            "stroke-width": "2",
-            d: "M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15",
-          }),
-        ]
-      ),
-  },
-  {
-    label: "Мест",
-    value: "5",
-    icon: () =>
-      h(
-        "svg",
-        {
-          class: "w-5 h-5",
-          fill: "none",
-          stroke: "currentColor",
-          viewBox: "0 0 24 24",
-        },
-        [
-          h("path", {
-            "stroke-linecap": "round",
-            "stroke-linejoin": "round",
-            "stroke-width": "2",
-            d: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z",
-          }),
-        ]
-      ),
-  },
-  {
-    label: "Топливо",
-    value: "Бензин",
-    icon: () =>
-      h(
-        "svg",
-        {
-          class: "w-5 h-5",
-          fill: "none",
-          stroke: "currentColor",
-          viewBox: "0 0 24 24",
-        },
-        [
-          h("path", {
-            "stroke-linecap": "round",
-            "stroke-linejoin": "round",
-            "stroke-width": "2",
-            d: "M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z",
-          }),
-        ]
-      ),
-  },
-  {
-    label: "Цвет",
-    value: "Черный",
-    icon: () =>
-      h(
-        "svg",
-        {
-          class: "w-5 h-5",
-          fill: "none",
-          stroke: "currentColor",
-          viewBox: "0 0 24 24",
-        },
-        [
-          h("path", {
-            "stroke-linecap": "round",
-            "stroke-linejoin": "round",
-            "stroke-width": "2",
-            d: "M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01",
-          }),
-        ]
-      ),
-  },
-  {
-    label: "Дверей",
-    value: "4",
-    icon: () =>
-      h(
-        "svg",
-        {
-          class: "w-5 h-5",
-          fill: "none",
-          stroke: "currentColor",
-          viewBox: "0 0 24 24",
-        },
-        [
-          h("path", {
-            "stroke-linecap": "round",
-            "stroke-linejoin": "round",
-            "stroke-width": "2",
-            d: "M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4",
-          }),
-        ]
-      ),
-  },
-];
+const specifications = computed(() => {
+  if (!car.value?.specifications) return [];
 
-const specifications = computed(() => defaultSpecifications);
+  const specs = car.value.specifications;
+  return [
+    {
+      label: "Двигатель",
+      value: specs.engine || "N/A",
+      icon: () =>
+        h(
+          "svg",
+          {
+            class: "w-5 h-5",
+            fill: "none",
+            stroke: "currentColor",
+            viewBox: "0 0 24 24",
+          },
+          [
+            h("path", {
+              "stroke-linecap": "round",
+              "stroke-linejoin": "round",
+              "stroke-width": "2",
+              d: "M13 10V3L4 14h7v7l9-11h-7z",
+            }),
+          ]
+        ),
+    },
+    {
+      label: "Коробка передач",
+      value: specs.transmission || "N/A",
+      icon: () =>
+        h(
+          "svg",
+          {
+            class: "w-5 h-5",
+            fill: "none",
+            stroke: "currentColor",
+            viewBox: "0 0 24 24",
+          },
+          [
+            h("path", {
+              "stroke-linecap": "round",
+              "stroke-linejoin": "round",
+              "stroke-width": "2",
+              d: "M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15",
+            }),
+          ]
+        ),
+    },
+    {
+      label: "Мест",
+      value: specs.seats?.toString() || "N/A",
+      icon: () =>
+        h(
+          "svg",
+          {
+            class: "w-5 h-5",
+            fill: "none",
+            stroke: "currentColor",
+            viewBox: "0 0 24 24",
+          },
+          [
+            h("path", {
+              "stroke-linecap": "round",
+              "stroke-linejoin": "round",
+              "stroke-width": "2",
+              d: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z",
+            }),
+          ]
+        ),
+    },
+    {
+      label: "Топливо",
+      value: specs.fuelType || "N/A",
+      icon: () =>
+        h(
+          "svg",
+          {
+            class: "w-5 h-5",
+            fill: "none",
+            stroke: "currentColor",
+            viewBox: "0 0 24 24",
+          },
+          [
+            h("path", {
+              "stroke-linecap": "round",
+              "stroke-linejoin": "round",
+              "stroke-width": "2",
+              d: "M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z",
+            }),
+          ]
+        ),
+    },
+    {
+      label: "Цвет",
+      value: specs.color || "N/A",
+      icon: () =>
+        h(
+          "svg",
+          {
+            class: "w-5 h-5",
+            fill: "none",
+            stroke: "currentColor",
+            viewBox: "0 0 24 24",
+          },
+          [
+            h("path", {
+              "stroke-linecap": "round",
+              "stroke-linejoin": "round",
+              "stroke-width": "2",
+              d: "M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01",
+            }),
+          ]
+        ),
+    },
+    {
+      label: "Дверей",
+      value: specs.doors?.toString() || "N/A",
+      icon: () =>
+        h(
+          "svg",
+          {
+            class: "w-5 h-5",
+            fill: "none",
+            stroke: "currentColor",
+            viewBox: "0 0 24 24",
+          },
+          [
+            h("path", {
+              "stroke-linecap": "round",
+              "stroke-linejoin": "round",
+              "stroke-width": "2",
+              d: "M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4",
+            }),
+          ]
+        ),
+    },
+    {
+      label: "Пробег",
+      value: specs.mileage ? `${specs.mileage} км` : "N/A",
+      icon: () =>
+        h(
+          "svg",
+          {
+            class: "w-5 h-5",
+            fill: "none",
+            stroke: "currentColor",
+            viewBox: "0 0 24 24",
+          },
+          [
+            h("path", {
+              "stroke-linecap": "round",
+              "stroke-linejoin": "round",
+              "stroke-width": "2",
+              d: "M13 10V3L4 14h7v7l9-11h-7z",
+            }),
+          ]
+        ),
+    },
+  ].filter((spec) => spec.value !== "N/A");
+});
 
-const defaultFeatures = [
-  "Кондиционер",
-  "Круиз-контроль",
-  "Bluetooth",
-  "USB порты",
-  "Камера заднего вида",
-  "Парктроник",
-  "Подогрев сидений",
-  "Мультимедиа система",
-];
-
-const features = computed(() => defaultFeatures);
+const features = computed(() => {
+  if (!car.value?.features) return [];
+  return car.value.features.map((f: any) => f.name || f) || [];
+});
 
 onMounted(async () => {
   const carId = Number(route.params.id);
@@ -697,7 +704,23 @@ onMounted(async () => {
 async function loadCarDetails(id: number) {
   try {
     const data = await getCarDetails(id);
-    car.value = data;
+
+    // Логируем для отладки
+    console.log("CAR DETAILS FROM API:", data);
+
+    // Нормализуем данные - если specifications нет, создаём из корневых полей
+    car.value = {
+      ...data,
+      specifications: data.specifications ?? {
+        engine: data.engine,
+        transmission: data.transmission,
+        fuelType: data.fuelType,
+        seats: data.seats,
+        doors: data.doors,
+        color: data.color,
+        mileage: data.mileage,
+      },
+    };
   } catch (e) {
     console.error("Ошибка загрузки деталей:", e);
     car.value = null;
