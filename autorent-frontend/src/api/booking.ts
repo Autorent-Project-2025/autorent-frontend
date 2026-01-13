@@ -28,32 +28,72 @@ export async function getMyBookings(
     }`;
     const res = await api.get(url);
 
+    // Если статус 204 No Content - возвращаем пустой массив
+    if (res.status === 204 || !res.data) {
+      return {
+        items: [],
+        totalCount: 0,
+        page: params?.page || 1,
+        pageSize: params?.pageSize || 10,
+        totalPages: 0,
+      };
+    }
+
     // Если ответ содержит items, это пагинированный ответ
     if (res.data.items) {
       return res.data as PaginatedResponse<Booking>;
     }
 
     // Иначе это просто массив - оборачиваем в пагинированный формат
+    const items = Array.isArray(res.data) ? res.data : [];
     return {
-      items: res.data,
-      totalCount: res.data.length,
+      items,
+      totalCount: items.length,
       page: 1,
-      pageSize: res.data.length,
-      totalPages: 1,
+      pageSize: items.length,
+      totalPages: items.length > 0 ? 1 : 0,
     };
   } catch (error) {
     // Fallback на старый endpoint
     console.log("v2 endpoint not available, using fallback /booking/my");
-    const res = await api.get("/booking/my");
 
-    // Оборачиваем в пагинированный формат для единообразия
-    return {
-      items: res.data,
-      totalCount: res.data.length,
-      page: 1,
-      pageSize: res.data.length,
-      totalPages: 1,
-    };
+    try {
+      const res = await api.get("/booking/my");
+
+      // Если статус 204 No Content - возвращаем пустой массив
+      if (res.status === 204 || !res.data) {
+        return {
+          items: [],
+          totalCount: 0,
+          page: params?.page || 1,
+          pageSize: params?.pageSize || 10,
+          totalPages: 0,
+        };
+      }
+
+      const items = Array.isArray(res.data) ? res.data : [];
+      // Оборачиваем в пагинированный формат для единообразия
+      return {
+        items,
+        totalCount: items.length,
+        page: 1,
+        pageSize: items.length,
+        totalPages: items.length > 0 ? 1 : 0,
+      };
+    } catch (fallbackError) {
+      console.error(
+        "Failed to fetch bookings from fallback endpoint:",
+        fallbackError
+      );
+      // Возвращаем пустой результат вместо ошибки
+      return {
+        items: [],
+        totalCount: 0,
+        page: params?.page || 1,
+        pageSize: params?.pageSize || 10,
+        totalPages: 0,
+      };
+    }
   }
 }
 

@@ -366,16 +366,21 @@ onMounted(async () => {
 async function loadBookings() {
   try {
     const data = await getMyBookings();
-    bookings.value = data.map((b: Booking) => ({
+
+    // Обрабатываем оба формата ответа
+    const items = Array.isArray(data) ? data : data.items;
+
+    bookings.value = items.map((b: Booking) => ({
       ...b,
       computedStatus: computeBookingStatus(b),
     }));
   } catch (e) {
     console.error("Failed to load bookings", e);
     error("Не удалось загрузить бронирования");
+    bookings.value = []; // Очищаем список при ошибке
   }
 }
-// now adding car statuses + coding 13, 14, 15 tasks
+
 function formatDate(dateString: string): string {
   return formatBookingDate(dateString);
 }
