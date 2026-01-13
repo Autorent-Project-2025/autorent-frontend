@@ -31,9 +31,7 @@ export const auth = reactive({
     localStorage.removeItem("user");
   },
 
-  /**
-   * Проверяет, истек ли токен на основе времени хранения из .env
-   */
+  //  Проверяет, истек ли токен на основе времени хранения из .env
   isTokenExpired(): boolean {
     const token = localStorage.getItem("token");
     const timestampStr = localStorage.getItem("tokenTimestamp");
@@ -60,9 +58,7 @@ export const auth = reactive({
     return elapsed >= expiryMs;
   },
 
-  /**
-   * Проверяет токен и автоматически разлогинивает, если истек
-   */
+  // Проверяет токен и автоматически разлогинивает, если истек
   checkTokenValidity(): boolean {
     if (this.isTokenExpired()) {
       this.logout();

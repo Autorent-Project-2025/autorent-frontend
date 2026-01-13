@@ -107,7 +107,7 @@
               <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
                 {{
                   car.description ||
-                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s."
                 }}
               </p>
             </div>
@@ -115,7 +115,7 @@
 
           <!-- Right Column -->
           <div class="flex flex-col gap-6 h-full">
-            <!-- Top Content - будет расти, но не влиять на кнопку -->
+            <!-- Top Content -->
             <div class="space-y-6">
               <!-- Title, Rating & Price -->
               <div class="space-y-4">
@@ -131,37 +131,27 @@
                     </p>
                   </div>
 
-                  <!-- Rating -->
-                  <div v-if="car.rating" class="flex flex-col items-end gap-1">
-                    <div class="flex items-center gap-2">
-                      <div class="flex items-center gap-1">
-                        <svg
-                          v-for="i in 5"
-                          :key="i"
-                          :class="[
-                            'w-5 h-5',
-                            i <= Math.round(car.rating)
-                              ? 'text-yellow-400 fill-current'
-                              : 'text-gray-300 dark:text-gray-600',
-                          ]"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                          />
-                        </svg>
-                      </div>
-                      <span
-                        class="text-2xl font-bold text-gray-900 dark:text-white"
-                      >
-                        {{ car.rating.toFixed(1) }}
-                      </span>
-                    </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">
-                      {{ car.comments?.length || 0 }} отзывов
-                    </p>
+                  <!-- Rating Badge (звездочка с цифрой) -->
+                  <div
+                    v-if="car.rating !== null && car.rating !== undefined"
+                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold text-sm shadow-lg bg-yellow-500 text-white"
+                  >
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                      <path
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                      />
+                    </svg>
+                    <span>{{ car.rating.toFixed(1) }}</span>
                   </div>
                 </div>
+
+                <!-- Comments Count -->
+                <p
+                  v-if="totalComments > 0"
+                  class="text-sm text-gray-500 dark:text-gray-400"
+                >
+                  {{ totalComments }} {{ getCommentsWord(totalComments) }}
+                </p>
 
                 <!-- Price -->
                 <div
@@ -270,13 +260,13 @@
             <h2 class="text-3xl font-bold text-gray-900 dark:text-white">
               Отзывы
               <span
-                v-if="car.comments?.length || 0 > 0"
+                v-if="totalComments > 0"
                 class="text-gray-500 dark:text-gray-400"
-                >({{ car.comments?.length || 0 }})</span
+                >({{ totalComments }})</span
               >
             </h2>
 
-            <!-- Add Review Button (только для авторизованных) -->
+            <!-- Add Review Button -->
             <button
               v-if="isAuthenticated"
               @click="openReviewModal"
@@ -315,10 +305,10 @@
             </router-link>
           </div>
 
-          <!-- Reviews List -->
-          <div v-if="car.comments?.length || 0 > 0" class="space-y-6">
+          <!-- Reviews List (3 комментария на странице) -->
+          <div v-if="comments.length > 0" class="space-y-6">
             <div
-              v-for="review in car.comments"
+              v-for="review in comments"
               :key="review.id"
               class="p-6 bg-gray-50 dark:bg-gray-800 rounded-2xl space-y-3"
             >
@@ -331,12 +321,16 @@
                     <span
                       class="text-lg font-bold text-primary-600 dark:text-primary-400"
                     >
-                      {{ review.userName.charAt(0).toUpperCase() }}
+                      {{
+                        review.username
+                          ? review.username.charAt(0).toUpperCase()
+                          : review.userName.charAt(0).toUpperCase()
+                      }}
                     </span>
                   </div>
                   <div>
                     <p class="font-semibold text-gray-900 dark:text-white">
-                      {{ review.userName }}
+                      {{ review.username || review.userName }}
                     </p>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
                       {{ formatDate(review.created_On) }}
@@ -396,6 +390,15 @@
             <p class="text-gray-600 dark:text-gray-400">
               Будьте первым, кто оставит отзыв об этом автомобиле!
             </p>
+          </div>
+
+          <!-- Comments Pagination (3 комментария на странице) -->
+          <div v-if="totalCommentPages > 1" class="mt-8">
+            <Pagination
+              :current-page="currentCommentPage"
+              :total-pages="totalCommentPages"
+              @page-change="handleCommentPageChange"
+            />
           </div>
         </div>
       </div>
@@ -476,12 +479,13 @@
 import { ref, onMounted, computed, h } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import type { CarDetails } from "../types/Car";
-import { getCarDetails, createCarComment } from "../api/cars";
+import { getCarDetails, createCarComment, getCarComments } from "../api/cars";
 import { createBooking } from "../api/booking";
 import { useToast } from "../composables/useToast";
 import { useAuth } from "../composables/useAuth";
 import BookingModal from "../components/BookingModal.vue";
 import ReviewModal from "../components/ReviewModal.vue";
+import Pagination from "../components/Pagination.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -495,36 +499,40 @@ const isReviewModalOpen = ref(false);
 const reviewModalRef = ref<InstanceType<typeof ReviewModal> | null>(null);
 const currentImageIndex = ref(0);
 
-// Дефолтные изображения для галереи (если нет других фото)
+// Comments pagination (3 комментария на странице)
+const comments = ref<any[]>([]);
+const currentCommentPage = ref(1);
+const commentPageSize = ref(3);
+const totalComments = ref(0);
+const totalCommentPages = computed(() =>
+  Math.ceil(totalComments.value / commentPageSize.value)
+);
+
+// Дефолтные изображения для галереи
 const defaultCarImages = [
-  "https://www.netcarshow.com/Mercedes-Benz-CLA45_S_AMG_4Matic-2020-Front_Three-Quarter.d21711f9.jpg?w=800&q=80", // Mercedes Front
-  "https://preview2.netcarshow.com/Mercedes-Benz-CLA45_S_AMG_4Matic-2020-Side_Profile.d21711f9.jpg?w=800&q=80", // Mercedes Side
-  "https://preview2.netcarshow.com/Mercedes-Benz-CLA45_S_AMG_4Matic-2020-Interior.d21711f9.jpg?w=800&q=80", // Mercedes Interior
-  "https://www.netcarshow.com/Mercedes-Benz-CLA45_S_AMG_4Matic-2020-Rear.d21711f9.jpg?w=800&q=80", // Mercedes Back
+  "https://www.netcarshow.com/Mercedes-Benz-CLA45_S_AMG_4Matic-2020-Front_Three-Quarter.d21711f9.jpg?w=800&q=80",
+  "https://preview2.netcarshow.com/Mercedes-Benz-CLA45_S_AMG_4Matic-2020-Side_Profile.d21711f9.jpg?w=800&q=80",
+  "https://preview2.netcarshow.com/Mercedes-Benz-CLA45_S_AMG_4Matic-2020-Interior.d21711f9.jpg?w=800&q=80",
+  "https://www.netcarshow.com/Mercedes-Benz-CLA45_S_AMG_4Matic-2020-Rear.d21711f9.jpg?w=800&q=80",
 ];
 
-// Вычисляемое свойство для массива изображений
 const carImages = computed(() => {
   if (!car.value) return defaultCarImages;
 
-  // Если есть imageUrl от бэка, используем его как основное фото
   const images = [];
   if (car.value.imageUrl) {
     images.push(car.value.imageUrl);
   }
 
-  // Добавляем дефолтные изображения для галереи
   images.push(...defaultCarImages.slice(0, 3));
-
   return images;
 });
 
-// Текущее отображаемое изображение
 const currentImage = computed(() => {
   return carImages.value[currentImageIndex.value];
 });
 
-// Дефолтные характеристики для всех машин
+// Дефолтные характеристики
 const defaultSpecifications = [
   {
     label: "Двигатель",
@@ -660,14 +668,8 @@ const defaultSpecifications = [
   },
 ];
 
-// Вычисляемое свойство для характеристик
-const specifications = computed(() => {
-  // В будущем можно будет получать характеристики с бэка
-  // Пока возвращаем дефолтные
-  return defaultSpecifications;
-});
+const specifications = computed(() => defaultSpecifications);
 
-// Дефолтные особенности
 const defaultFeatures = [
   "Кондиционер",
   "Круиз-контроль",
@@ -679,12 +681,7 @@ const defaultFeatures = [
   "Мультимедиа система",
 ];
 
-// Вычисляемое свойство для особенностей
-const features = computed(() => {
-  // В будущем можно будет получать особенности с бэка
-  // Пока возвращаем дефолтные
-  return defaultFeatures;
-});
+const features = computed(() => defaultFeatures);
 
 onMounted(async () => {
   const carId = Number(route.params.id);
@@ -694,17 +691,12 @@ onMounted(async () => {
   }
 
   await loadCarDetails(carId);
+  await loadComments(carId);
 });
 
 async function loadCarDetails(id: number) {
   try {
     const data = await getCarDetails(id);
-
-    // Убедимся что comments это массив
-    if (!data.comments) {
-      data.comments = [];
-    }
-
     car.value = data;
   } catch (e) {
     console.error("Ошибка загрузки деталей:", e);
@@ -712,6 +704,55 @@ async function loadCarDetails(id: number) {
   } finally {
     loading.value = false;
   }
+}
+
+async function loadComments(carId: number) {
+  try {
+    const response = await getCarComments(carId, {
+      page: currentCommentPage.value,
+      pageSize: commentPageSize.value,
+    });
+
+    // Проверяем формат ответа
+    if (response.items) {
+      comments.value = response.items;
+      totalComments.value = response.totalCount;
+    } else {
+      // Fallback - если ответ не пагинированный
+      comments.value = [];
+      totalComments.value = 0;
+    }
+  } catch (e) {
+    console.error("Ошибка загрузки комментариев:", e);
+    comments.value = [];
+    totalComments.value = 0;
+  }
+}
+
+function handleCommentPageChange(page: number) {
+  currentCommentPage.value = page;
+  if (car.value) {
+    loadComments(car.value.id);
+  }
+}
+
+function getCommentsWord(count: number): string {
+  const lastDigit = count % 10;
+  const lastTwoDigits = count % 100;
+
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 14) {
+    return "отзывов";
+  }
+
+  if (lastDigit === 1) {
+    return "отзыв";
+  }
+
+  if (lastDigit >= 2 && lastDigit <= 4) {
+    return "отзыва";
+  }
+
+  return "отзывов";
 }
 
 function formatDate(dateString: string): string {
@@ -723,7 +764,6 @@ function formatDate(dateString: string): string {
   }).format(date);
 }
 
-// Booking Modal
 function openBookingModal() {
   isBookingModalOpen.value = true;
 }
@@ -745,7 +785,6 @@ async function handleBookingConfirm(startDate: string, endDate: string) {
   }
 }
 
-// Review Modal
 function openReviewModal() {
   isReviewModalOpen.value = true;
 }
@@ -761,16 +800,16 @@ async function handleReviewSubmit(rating: number, content: string) {
     await createCarComment(car.value.id, content, rating);
     success("Отзыв успешно добавлен!");
 
-    // Закрываем модальное окно
     closeReviewModal();
 
-    // Перезагружаем детали машины чтобы увидеть новый отзыв
+    // Перезагружаем детали и комментарии
     await loadCarDetails(car.value.id);
+    currentCommentPage.value = 1; // Сбрасываем на первую страницу
+    await loadComments(car.value.id);
   } catch (e: any) {
     console.error("Ошибка добавления отзыва:", e);
     error(e.response?.data?.message || "Не удалось добавить отзыв");
   } finally {
-    // Reset submitting state in modal
     if (reviewModalRef.value) {
       reviewModalRef.value.setSubmitting(false);
     }

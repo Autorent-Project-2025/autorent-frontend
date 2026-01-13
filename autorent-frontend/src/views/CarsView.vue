@@ -16,14 +16,51 @@
         </p>
       </div>
 
-      <!-- Cars Grid -->
+      <!-- Filters and Sorting -->
+      <div
+        class="mb-8 p-6 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800"
+      >
+        <div class="flex flex-wrap items-center gap-4">
+          <!-- Single Sort Selector -->
+          <div class="flex items-center gap-2">
+            <label
+              class="text-sm font-semibold text-gray-700 dark:text-gray-300"
+            >
+              Сортировка:
+            </label>
+            <select
+              v-model="sortType"
+              class="px-4 py-3 bg-gray-50 dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white font-medium focus:border-primary-500 focus:outline-none transition-colors min-w-[200px]"
+            >
+              <option value="popular">Популярные</option>
+              <option value="newest">Новинки</option>
+              <option value="price_asc">Сначала дешевые</option>
+              <option value="price_desc">Сначала дорогие</option>
+              <option value="rating">Высокий рейтинг</option>
+            </select>
+          </div>
+
+          <!-- Results Count -->
+          <div
+            class="ml-auto text-sm text-gray-600 dark:text-gray-400 font-medium"
+          >
+            Всего автомобилей:
+            <span class="font-bold text-gray-900 dark:text-white">{{
+              totalCount
+            }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cars Grid (3x3) -->
       <div
         v-if="cars.length > 0"
+        :key="gridKey"
         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
       >
         <div
-          v-for="car in carsWithStatus"
-          :key="car.id"
+          v-for="(car, index) in carsWithStatus"
+          :key="`${car.id}-${index}-${sortType}`"
           class="group relative bg-white dark:bg-gray-900 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 card-hover border border-gray-200 dark:border-gray-800 flex flex-col"
           :class="{ 'opacity-75': !car.isAvailable }"
         >
@@ -61,6 +98,23 @@
               <span class="text-sm font-semibold text-white">{{
                 car.year
               }}</span>
+            </div>
+
+            <!-- ✅ ЗВЕЗДОЧКА С КОМПАКТНЫМ GLASS ФОНОМ -->
+            <div
+              v-if="car.rating !== null && car.rating !== undefined"
+              class="absolute bottom-4 right-4 glass px-2 py-1 rounded-full backdrop-blur-md"
+            >
+              <div class="inline-flex items-center gap-1">
+                <svg class="w-3.5 h-3.5 fill-yellow-400" viewBox="0 0 20 20">
+                  <path
+                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                  />
+                </svg>
+                <span class="text-xs font-bold text-white">{{
+                  car.rating.toFixed(1)
+                }}</span>
+              </div>
             </div>
 
             <!-- Unavailable Overlay -->
@@ -181,7 +235,7 @@
       </div>
 
       <!-- Loading State -->
-      <div v-else class="text-center py-32">
+      <div v-else-if="loading" class="text-center py-32">
         <div class="inline-flex flex-col items-center gap-6">
           <div class="relative">
             <div
@@ -195,6 +249,46 @@
             Загрузка автомобилей...
           </p>
         </div>
+      </div>
+
+      <!-- Empty State -->
+      <div v-else class="text-center py-32">
+        <div class="inline-flex flex-col items-center gap-6 max-w-md mx-auto">
+          <div
+            class="w-24 h-24 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center"
+          >
+            <svg
+              class="w-12 h-12 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+          </div>
+          <div class="space-y-2">
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">
+              Автомобили не найдены
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400">
+              Попробуйте изменить параметры поиска
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination (9 машин на страницу) -->
+      <div v-if="totalPages > 1" class="mt-12">
+        <Pagination
+          :current-page="currentPage"
+          :total-pages="totalPages"
+          @page-change="handlePageChange"
+        />
       </div>
     </div>
 
@@ -217,18 +311,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch, nextTick } from "vue";
 import { useRouter } from "vue-router";
-import { getCars } from "../api/cars";
+import { getCars, type GetCarsParams } from "../api/cars";
 import { createBooking, getCarBookings } from "../api/booking";
 import type { Car } from "../types/Car";
 import type { Booking } from "../types/Booking";
+import type { PaginatedResponse } from "../types/Pagination";
 import { config } from "../config";
 import { useToast } from "../composables/useToast";
 import { useAuth } from "../composables/useAuth";
 import { isCarAvailable } from "../utils/bookingUtils";
 import BookingModal from "../components/BookingModal.vue";
 import LoginRequiredModal from "../components/LoginRequiredModal.vue";
+import Pagination from "../components/Pagination.vue";
 
 interface CarWithStatus extends Car {
   isAvailable: boolean;
@@ -241,6 +337,22 @@ const carBookings = ref<Record<number, Booking[]>>({});
 const selectedCar = ref<Car | null>(null);
 const isModalOpen = ref(false);
 const showLoginModal = ref(false);
+const loading = ref(true);
+
+// ✅ ДОБАВЛЕН: gridKey для force re-render
+const gridKey = ref(0);
+
+// Pagination (9 машин на странице)
+const currentPage = ref(1);
+const pageSize = ref(9);
+const totalCount = ref(0);
+const totalPages = computed(() => Math.ceil(totalCount.value / pageSize.value));
+
+// Sorting
+const sortType = ref<
+  "popular" | "newest" | "price_asc" | "price_desc" | "rating"
+>("popular");
+
 const { success, error } = useToast();
 const { isAuthenticated } = useAuth();
 
@@ -250,7 +362,6 @@ const carsWithStatus = computed<CarWithStatus[]>(() => {
     const bookings = carBookings.value[car.id] || [];
     const now = new Date();
 
-    // Проверяем доступность на текущий момент
     const available = isCarAvailable(
       bookings,
       now,
@@ -269,15 +380,83 @@ onMounted(async () => {
   await loadCars();
 });
 
-async function loadCars() {
-  try {
-    cars.value = await getCars();
+// ✅ ИСПРАВЛЕНО: watch с force re-render
+watch(sortType, async () => {
+  currentPage.value = 1;
+  await loadCars();
+  // ✅ Force re-render grid
+  gridKey.value++;
+  await nextTick();
+});
 
-    // Загружаем бронирования для каждой машины
+async function loadCars() {
+  loading.value = true;
+  try {
+    let sortBy: "rating" | "priceHour" | "year" = "rating";
+    let sortOrder: "asc" | "desc" = "desc";
+
+    switch (sortType.value) {
+      case "popular":
+        sortBy = "rating";
+        sortOrder = "desc";
+        break;
+      case "newest":
+        sortBy = "year";
+        sortOrder = "desc";
+        break;
+      case "price_asc":
+        sortBy = "priceHour";
+        sortOrder = "asc";
+        break;
+      case "price_desc":
+        sortBy = "priceHour";
+        sortOrder = "desc";
+        break;
+      case "rating":
+        sortBy = "rating";
+        sortOrder = "desc";
+        break;
+    }
+
+    const params: GetCarsParams = {
+      page: currentPage.value,
+      pageSize: pageSize.value,
+      sortBy,
+      sortOrder,
+    };
+
+    console.log("🔍 loadCars called with sortType:", sortType.value);
+    console.log("📊 Converted to params:", params);
+
+    const response = await getCars(params);
+
+    if (Array.isArray(response)) {
+      cars.value = response;
+      totalCount.value = response.length;
+    } else {
+      cars.value = response.items;
+      totalCount.value = response.totalCount;
+    }
+
+    // ✅ ПОДРОБНЫЙ ЛОГ - теперь видно ВСЕ машины с ценами
+    console.log(
+      "🚗 ALL cars after load:",
+      cars.value.map((car, idx) => ({
+        index: idx,
+        brand: car.brand,
+        model: car.model,
+        price: car.priceHour,
+        rating: car.rating,
+        year: car.year,
+      }))
+    );
+
     await loadAllCarBookings();
   } catch (e) {
-    console.error("Ошибка при загрузке авто:", e);
+    console.error("❌ Ошибка при загрузке авто:", e);
     error("Не удалось загрузить список автомобилей");
+  } finally {
+    loading.value = false;
   }
 }
 
@@ -288,7 +467,6 @@ async function loadAllCarBookings() {
         const bookings = await getCarBookings(car.id);
         return { carId: car.id, bookings };
       } catch (e) {
-        console.error(`Ошибка загрузки бронирований для машины ${car.id}:`, e);
         return { carId: car.id, bookings: [] };
       }
     });
@@ -306,8 +484,13 @@ async function loadAllCarBookings() {
   }
 }
 
+function handlePageChange(page: number) {
+  currentPage.value = page;
+  loadCars();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
 function openBookingModal(car: CarWithStatus) {
-  // Проверяем авторизацию перед бронированием
   if (!isAuthenticated.value) {
     showLoginModal.value = true;
     return;
@@ -340,7 +523,6 @@ async function handleBookingConfirm(startDate: string, endDate: string) {
   const carId = selectedCar.value.id;
   const bookings = carBookings.value[carId] || [];
 
-  // Проверяем доступность на выбранный период
   const start = new Date(startDate);
   const end = new Date(endDate);
 
@@ -355,8 +537,6 @@ async function handleBookingConfirm(startDate: string, endDate: string) {
       `${selectedCar.value.brand} ${selectedCar.value.model} успешно забронирован!`
     );
     closeBookingModal();
-
-    // Перезагружаем бронирования для обновления статуса
     await loadAllCarBookings();
   } catch (e) {
     console.error("Ошибка бронирования:", e);
