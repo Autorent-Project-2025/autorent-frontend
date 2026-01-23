@@ -2,16 +2,46 @@ export interface Car {
   id: number;
   brand: string;
   model: string;
-  year: number;
   priceHour: number | null;
-  priceDay: number | null;
-  imageUrl: string | null;
+  category: string;
   rating: number | null;
   description: string | null;
+
+  images?: string[];
+  features?: string[];
+  specifications?: CarSpecifications;
 }
 
-// Спецификации автомобиля
+export interface CarPreview {
+  id: number;
+  brand: string;
+  model: string;  
+  year?: number;
+  category: string;
+  imageUrl?: string;
+  priceHour: number | null;
+  rating: number | null;
+}
+
+export interface CarDetails {
+  id: number;
+  brand: string;
+  model: string;
+  
+  priceHour: number | null;
+  priceDay: number | null;
+  
+  rating: number | null;
+  description: string | null;
+  
+  images?: string[];
+  features?: string[];
+  specifications?: CarSpecifications;
+}
+
 export interface CarSpecifications {
+  year?: number;
+  bodyType?: string;
   engine?: string;
   transmission?: string;
   fuelType?: string;
@@ -19,14 +49,6 @@ export interface CarSpecifications {
   doors?: number;
   color?: string;
   mileage?: number;
-}
-
-export interface CarDetails extends Car {
-  comments: CarComment[];
-  // Дополнительные поля
-  images?: string[]; // Массив дополнительных изображений
-  features?: string[]; // Массив особенностей
-  specifications?: CarSpecifications; // Характеристики
 }
 
 export interface CarComment {

@@ -1,243 +1,145 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --bg-dark: var(--color-gray-300);
+  --bg: var(--color-gray-200);
+  --bg-light: var(--color-gray-100);
+  --text: hsl(0, 0%, 5%);
+  --text-muted: hsl(0, 0%, 20%);
+  --gradient: linear-gradient(
+    to right,
+    var(--color-blue-600),
+    var(--color-blue-700)
+  );
+  --primary: var(--color-blue-700);
+  --overlay: var(--color-neutral-100);
+  --border: var(--color-gray-200);
+
+  --shadow-s: 0px 2px 4px hsla(0, 0%, 0%, 0.4);
+  --shadow-m: 0px 4px 8px hsla(0, 0%, 0%, 0.4);
+  --shadow-l: 0px 6px 10px hsla(0, 0%, 0%, 0.4);
+
+  --shadow-s-in: inset 0px 2px 4px hsla(0, 0%, 0%, 0.4);
+  --shadow-m-in: inset 0px 4px 8px hsla(0, 0%, 0%, 0.4);
+  --shadow-l-in: inset 0px 6px 10px hsla(0, 0%, 0%, 0.4);
+}
+
+.dark {
+  --bg-dark: var(--color-gray-950);
+  --bg: var(--color-gray-900);
+  --bg-light: var(--color-gray-800);
+  --text: hsl(0, 0%, 95%);
+  --text-muted: hsl(0, 0%, 80%);
+  --gradient: linear-gradient(
+    to right,
+    var(--color-blue-400),
+    var(--color-blue-500)
+  );
+  --primary: var(--color-blue-400);
+  --overlay: var(--color-neutral-950);
+  --border: var(--color-gray-800);
+
+  --s-s: 0px 2px 4px hsla(0, 0%, 0%, 0.6);
+  --s-m: 0px 4px 8px hsla(0, 0%, 0%, 0.6);
+  --s-l: 0px 6px 10px hsla(0, 0%, 0%, 0.6);
+
+  --s-s-in: inset 0px 2px 4px hsla(0, 0%, 0%, 0.6);
+  --s-m-in: inset 0px 4px 8px hsla(0, 0%, 0%, 0.6);
+  --s-l-in: inset 0px 6px 10px hsla(0, 0%, 0%, 0.6);
+}
+
+@theme {
+  --color-bg-dark: var(--bg-dark);
+  --color-bg: var(--bg);
+  --color-bg-light: var(--bg-light);
+  --bg-gradient: var(--gradient);
+  --color-primary: var(--primary);
+  --color-overlay: var(--overlay);
+  --color-border: var(--border);
+
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+
+  --shadow-s: var(--s-s);
+  --shadow-m: var(--s-m);
+  --shadow-l: var(--s-l);
+
+  --shadow-s-in: var(--s-s-in);
+  --shadow-m-in: var(--s-m-in);
+  --shadow-l-in: var(--s-l-in);
+
+  --glow-s: 0px 0px 10px var(--color-blue-800);
+  --glow-m: 0px 0px 14px var(--color-blue-800);
+  --glow-l: 0px 0px 18px var(--color-blue-800);
+}
 
 @layer base {
-  body {
-    @apply bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100;
-    @apply transition-colors duration-300;
-    /* 
-    🔤 MONTSERRAT используется здесь - для всего body 
-    Если не понравится - удалите эту строку
-    */
-    font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI",
-      sans-serif;
-  }
-
-  /* Smooth scrolling */
   html {
     scroll-behavior: smooth;
   }
-
-  /* Custom scrollbar */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+  #app {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: 1fr auto;
+  }
+  body {
+    background-color: var(--bg-dark);
+    font-family: "Montserrat", sans-serif;
+    color: var(--text);
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
   }
 
-  ::-webkit-scrollbar-track {
-    @apply bg-gray-100 dark:bg-gray-900;
+  h1 {
+    font-weight: 800;
+    font-size: clamp(2rem, 3.6vw, 3rem);
   }
-
-  ::-webkit-scrollbar-thumb {
-    @apply bg-gray-400 dark:bg-gray-600 rounded-full;
+  h2 {
+    font-weight: 800;
+    font-size: clamp(1.5rem, 2vw, 2rem);
   }
-
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-gray-500 dark:bg-gray-500;
+  h3 {
+    font-weight: 600;
+    font-size: clamp(1.25rem, 1.4vw, 1.5rem);
   }
-}
-
-/* 
-===================================
-🎬 VIEW TRANSITIONS - MORPH EFFECT
-===================================
-Это создаёт эффект как в PowerPoint Morph
-*/
-
-/* Включаем View Transitions для всей страницы */
-@view-transition {
-  navigation: auto;
-}
-
-/* Анимация для карточки машины → страница деталей */
-.car-card-image {
-  view-transition-name: car-image;
-}
-
-.car-detail-main-image {
-  view-transition-name: car-image;
-}
-
-/* Настройка анимации перехода */
-::view-transition-old(car-image),
-::view-transition-new(car-image) {
-  animation-duration: 0.5s;
-  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Плавное появление контента */
-::view-transition-old(root) {
-  animation: fade-out 0.3s ease-out;
-}
-
-::view-transition-new(root) {
-  animation: fade-in 0.4s ease-in 0.1s;
-}
-
-@keyframes fade-out {
-  to {
-    opacity: 0;
+  p {
+    color: var(--text-muted);
+    font-size: clamp(1rem, 1.2vw, 1.25rem);
+  }
+  a,
+  button {
+    font-size: clamp(1rem, 1.4vw, 1.25rem);
   }
 }
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-}
-
-/* Если браузер не поддерживает View Transitions */
-@supports not (view-transition-name: none) {
-  .car-card-image,
-  .car-detail-main-image {
-    transition: all 0.3s ease;
-  }
-}
-
-/* 
-===================================
-END VIEW TRANSITIONS
-===================================
-*/
 
 @layer components {
-  /* Primary button */
-  .btn-primary {
-    @apply bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-xl transition-all hover:shadow-lg active:scale-95;
+  .section {
+    @apply p-[5%] flex flex-col gap-6;
   }
-
-  /* Premium button with gradient */
-  .btn-premium {
-    @apply relative overflow-hidden bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-bold py-3 px-6 rounded-2xl transition-all hover:shadow-2xl hover:shadow-primary-500/50 active:scale-95;
-    @apply flex items-center justify-center gap-2;
+  .logo {
+    font-size: clamp(1.5rem, 3.2vw, 1.75rem);
+    font-weight: 700;
   }
-
-  /* Glass effect */
-  .glass {
-    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  .overlay-text {
+    @apply text-sm backdrop-blur-xl bg-neutral-300/20 text-neutral-50 px-3 py-2 rounded-full border border-neutral-200;
   }
-
-  .glass-dark {
-    @apply bg-gray-900/80 backdrop-blur-xl border border-gray-700/50;
+  .card {
+    @apply bg-bg p-5 border border-border rounded-2xl shadow-(--shadow-m);
   }
-
-  /* Card hover effect */
   .card-hover {
-    @apply transition-all duration-300 hover:-translate-y-2;
+    @apply md:transition-[translate,background-color,box-shadow] md:duration-300 
+    md:hover:bg-bg-light/80 md:hover:shadow-(--shadow-l) md:hover:-translate-y-2;
+  }
+  .primary-text {
+    @apply bg-(image:--bg-gradient) text-transparent bg-clip-text;
   }
 
-  /* Glow effect */
-  .glow-primary {
-    box-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
-  }
-
-  .glow-success {
-    box-shadow: 0 0 30px rgba(34, 197, 94, 0.4);
-  }
-
-  .glow-warning {
-    box-shadow: 0 0 30px rgba(251, 191, 36, 0.4);
+  .photo {
+    @apply w-full aspect-video rounded-2xl object-cover;
   }
 }
-
-@layer utilities {
-  /* Animation delays */
-  .animate-delay-100 {
-    animation-delay: 100ms;
-  }
-
-  .animate-delay-200 {
-    animation-delay: 200ms;
-  }
-
-  .animate-delay-300 {
-    animation-delay: 300ms;
-  }
-
-  /* Gradient backgrounds */
-  .bg-gradient-dark {
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  }
-
-  .bg-gradient-primary {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  }
-
-  /* Text gradients */
-  .text-gradient-primary {
-    @apply bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent;
-  }
-}
-
-/* Custom animations */
-@keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slide-in-right {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes pulse-glow {
-  0%,
-  100% {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
-  }
-}
-
-.animate-slide-up {
-  animation: slide-up 0.6s ease-out;
-}
-
-.animate-slide-in-right {
-  animation: slide-in-right 0.6s ease-out;
-}
-
-.animate-fade-in {
-  animation: fade-in 0.6s ease-out;
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
-}
-
-/* 
-testing new font 
-/*
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Montserrat', sans-serif;
-}
-
-.font-display {
-  font-family: 'Montserrat', sans-serif;
-}
-*/

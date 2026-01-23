@@ -1,0 +1,85 @@
+  import type { Car } from "../types/Car";
+
+  export const cars_list: Car[] = [
+    {
+      id: 1,
+      brand: "Mercedes-Benz",
+      model: "CLA45 S AMG",
+      priceHour: 12,
+      category: "Premium",
+      rating: 4.5,
+      description:
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+      specifications: {
+        bodyType: "Седан",
+        engine: "2.0",
+        fuelType: "Дизель",
+        seats: 5,
+        transmission: "Автомат",
+        doors: 5,
+        color: "Черный",
+        year: 2020,
+        mileage: 10000,
+      },
+      images: [
+        "https://www.netcarshow.com/Mercedes-Benz-CLA45_S_AMG_4Matic-2020-1280-bf89f74783a866f1388cc38d904cf32f23.jpg",
+        "https://www.netcarshow.com/Mercedes-Benz-CLA45_S_AMG_4Matic-2020-1280-4cfc50549cb323cdc2b5bf1692da8c2787.jpg",
+        "https://www.netcarshow.com/Mercedes-Benz-CLA45_S_AMG_4Matic-2020-1280-47cbc649acaa2f4efbaadb1fe4ae014a19.jpg",
+        "https://www.netcarshow.com/Mercedes-Benz-CLA45_S_AMG_4Matic-2020-1280-2f41dbd48de04641455f74cbe549de2397.jpg",
+      ],
+    },
+    {
+      id: 2,
+      brand: "Volkswagen",
+      model: "Golf GTD",
+      priceHour: 10,
+      category: "Premium",
+      rating: 4.2,
+      description:
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+      specifications: {
+        bodyType: "Седан",
+        engine: "2.0",
+        fuelType: "Дизель",
+        seats: 5,
+        transmission: "Автомат",
+        doors: 5,
+        color: "Черный",
+        year: 2017,
+        mileage: 10000,
+      },
+      images: [
+        "https://www.netcarshow.com/Volkswagen-Golf_GTD_Variant-2017-1280-c37b3d02109120157a630abcb09c05baf9.jpg",
+        "https://www.netcarshow.com/Volkswagen-Golf_GTD_Variant-2017-1280-23d9e670aa2c8972d8f99abd901116a38d.jpg",
+        "https://www.netcarshow.com/Volkswagen-Golf_GTD_Variant-2017-1280-57702393e498d29f29ba265b5026f3f101.jpg",
+        "https://www.netcarshow.com/Volkswagen-Golf_GTD_Variant-2017-1280-47aea94fddb1654e046cafa0005d0b8b0d.jpg",
+      ],
+    },
+    {
+      id: 3,
+      brand: "Acura",
+      model: "RSX Type S",
+      priceHour: 8,
+      category: "Econom",
+      rating: 4.6,
+      description:
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+      specifications: {
+        bodyType: "Седан",
+        engine: "2.0",
+        fuelType: "Дизель",
+        seats: 5,
+        transmission: "Автомат",
+        doors: 5,
+        color: "Черный",
+        year: 2005,
+        mileage: 10000,
+      },
+      images: [
+        "https://www.netcarshow.com/Acura-RSX_Type-S-2005-1280-565739dd29b7ef28e9f588a690f389f836.jpg",
+        "https://www.netcarshow.com/Acura-RSX_Type-S-2005-1280-3b165d0ae2bd83e52f6b5bc1103a47c1d7.jpg",
+        "https://www.netcarshow.com/Acura-RSX_Type-S-2005-1280-234dbbd94aafeb6822db0792f1ed24b455.jpg",
+        "https://www.netcarshow.com/Acura-RSX_Type-S-2005-1280-1e654b0c52d7f62bcfbb0ec961d4b07dab.jpg",
+      ],
+    },
+  ];
