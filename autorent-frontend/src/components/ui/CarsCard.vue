@@ -5,10 +5,15 @@ import type { CarPreview } from "@/types/Car";
 import Features from "./Features.vue";
 
 const props = defineProps<{ car: CarPreview }>();
+const emit = defineEmits<{ (e: "book", car: CarPreview): void; }>(); 
+const bookCar = () => { emit("book", props.car); };
 </script>
 
 <template>
-  <div class="card card-hover p-0 relative group cursor-pointer max-w-xl">
+  <div
+    @click="$router.push(`/cars/${car.id}`)"
+    class="card card-hover p-0 relative group cursor-pointer max-w-xl"
+  >
     <div class="overflow-hidden rounded-t-2xl grid">
       <img
         :src="car.imageUrl"
@@ -60,7 +65,14 @@ const props = defineProps<{ car: CarPreview }>();
         </Features>
       </div>
 
-      <Button @click.stop>Забронировать</Button>
+      <Button @click.stop="bookCar"
+        ><span class="grid items-center w-60">
+          <span class="col-[1/2] row-[1/2]">Забронировать</span>
+          <Icon
+            class="opacity-0 transition duration-200 -translate-x-10 col-[1/2] row-[1/2] justify-self-end text-2xl group-hover/button:opacity-100 group-hover/button:translate-x-0"
+            icon="tabler:arrow-right"
+          /> </span
+      ></Button>
     </div>
   </div>
 </template>
