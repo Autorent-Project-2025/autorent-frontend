@@ -72,9 +72,9 @@
   --shadow-m-in: var(--s-m-in);
   --shadow-l-in: var(--s-l-in);
 
-  --glow-s: 0px 0px 10px var(--color-blue-800);
-  --glow-m: 0px 0px 14px var(--color-blue-800);
-  --glow-l: 0px 0px 18px var(--color-blue-800);
+  --glow-s: 0px 0px 10px var(--color-blue-500);
+  --glow-m: 0px 0px 14px var(--color-blue-500);
+  --glow-l: 0px 0px 18px var(--color-blue-500);
 }
 
 @layer base {
@@ -129,7 +129,7 @@
     @apply text-sm backdrop-blur-xl bg-neutral-300/20 text-neutral-50 px-3 py-2 rounded-full border border-neutral-200;
   }
   .card {
-    @apply bg-bg p-5 border border-border rounded-2xl shadow-(--shadow-m);
+    @apply bg-bg p-5 border border-border rounded-3xl shadow-(--shadow-m);
   }
   .card-hover {
     @apply md:transition-[translate,background-color,box-shadow] md:duration-300 

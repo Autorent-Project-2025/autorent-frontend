@@ -3,6 +3,7 @@ import HomeView from "@/pages/HomeView.vue";
 import CarsView from "@/pages/CarsView.vue";
 import BookingsView from "@/pages/BookingsView.vue";
 import CarView from "@/pages/CarView.vue";
+import { useAuthStore } from "@/stores/authStore";
 
 const routes = [
   { path: "/", component: HomeView },
