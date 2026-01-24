@@ -2,10 +2,11 @@ export interface Car {
   id: number;
   brand: string;
   model: string;
-  priceHour: number | null;
+  year: number;
+  priceHour: number;
   category: string;
-  rating: number | null;
-  description: string | null;
+  rating: number;
+  description: string;
 
   images?: string[];
   features?: string[];
@@ -19,20 +20,21 @@ export interface CarPreview {
   year?: number;
   category: string;
   imageUrl?: string;
-  priceHour: number | null;
-  rating: number | null;
+  priceHour: number;
+  rating: number;
 }
 
 export interface CarDetails {
   id: number;
   brand: string;
   model: string;
+  year?: number;
   
-  priceHour: number | null;
-  priceDay: number | null;
+  priceHour: number;
+  priceDay: number;
   
-  rating: number | null;
-  description: string | null;
+  rating: number;
+  description: string;
   
   images?: string[];
   features?: string[];
@@ -40,7 +42,6 @@ export interface CarDetails {
 }
 
 export interface CarSpecifications {
-  year?: number;
   bodyType?: string;
   engine?: string;
   transmission?: string;
