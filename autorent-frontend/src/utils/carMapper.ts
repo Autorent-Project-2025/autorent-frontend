@@ -9,7 +9,7 @@ export function mapToCarPreview(car: Car): CarPreview {
     id: car.id,
     brand: car.brand,
     model: car.model,
-    year: car.specifications?.year,
+    year: car.year,
     category: car.category,
     rating: car.rating,
     priceHour: car.priceHour,
@@ -22,9 +22,10 @@ export function mapToCarDetails(car: Car): CarDetails {
     id: car.id,
     brand: car.brand,
     model: car.model,
+    year: car.year,
 
     priceHour: car.priceHour,
-    priceDay: car.priceHour ? car.priceHour * DAY_HOURS : null,
+    priceDay: car.priceHour * DAY_HOURS,
 
     rating: car.rating,
     description: car.description,

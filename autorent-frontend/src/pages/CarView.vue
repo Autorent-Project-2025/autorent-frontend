@@ -1,10 +1,15 @@
 <script setup lang="ts">
-import { Icon } from "@iconify/vue";
 import { ref, computed, onMounted } from "vue";
-import Button from "@/components/ui/Button.vue";
 import { useRoute, RouterLink } from "vue-router";
+
+import Button from "@/components/ui/Button.vue";
+import BookingModal from "@/components/modals/BookingModal.vue";
+
+import { Icon } from "@iconify/vue";
 import type { CarDetails } from "../types/Car";
 import { useCarsStore } from "../stores/carStore";
+import type { BookingDraft } from "../types/Booking";
+import { mapCarToBookingDraft } from "../utils/bookingMapper";
 
 const activeImageIndex = ref(0);
 const route = useRoute();
@@ -16,10 +21,9 @@ const setActiveImage = (index: number) => {
 
 const featureSchema = [
   { key: "bodyType", title: "Тип", icon: "tabler:car", suffix: "" },
-  { key: "engine", title: "Двигатель", icon: "tabler:engine", suffix: " л." },
+  { key: "engine", title: "Двигатель", icon: "tabler:engine", suffix: "" },
   { key: "seats", title: "Мест", icon: "tabler:user", suffix: "" },
-  { key: "fuelType", title: "Топливо", icon: "tabler:gas-station", suffix: "" },
-  { key: "year", title: "Год", icon: "tabler:calendar", suffix: " г." },
+  { key: "fuelType", title: "Топливо", icon: "tabler:gas-station", suffix: "" },  
   {
     key: "transmission",
     title: "Трансмиссия",
@@ -42,6 +46,14 @@ const specifications = computed(() => {
 });
 const car = computed(() => carsStore.carDetails);
 
+const bookingDraft = ref<BookingDraft | null>(null);
+const isModalOpen = ref(false);
+const openBooking = () => {
+  if (!car.value) return;
+  bookingDraft.value = mapCarToBookingDraft(car.value);
+  isModalOpen.value = true;
+};
+
 onMounted(() => {
   carsStore.loadCarDetails(Number(route.params.id));
 });
@@ -54,6 +66,11 @@ onMounted(() => {
         ><Icon icon="tabler:arrow-left" />Автомобили</span
       >
     </RouterLink>
+    <BookingModal
+      v-model="isModalOpen"
+      v-if="bookingDraft"
+      :booking="bookingDraft"
+    />
 
     <div v-if="car" class="container">
       <div class="image">
@@ -82,11 +99,15 @@ onMounted(() => {
         />
       </div>
 
-      <h2 class="title">{{ car.brand }} {{ car.model }}</h2>
+      <div class="title">
+        <h2>{{ car.brand }} {{ car.model }}</h2>
+      <p>{{  car.year }} года выпуска</p>
+      </div>
       <span class="card shadow-(--shadow-s-in)"
         ><span class="price font-bold text-4xl text-primary"
           >{{ car.priceHour }}$</span
-        > / час или {{ car.priceDay }}$ / день</span
+        >
+        / час или {{ car.priceDay }}$ / день</span
       >
 
       <div class="card shadow-(--shadow-s-in) features">
@@ -97,16 +118,26 @@ onMounted(() => {
             :key="specification.title"
             class="flex items-center gap-2"
           >
-            <Icon :icon="specification.icon" class="text-primary bg-bg-light w-10 h-10 rounded-xl p-2 hidden md:block" />
+            <Icon
+              :icon="specification.icon"
+              class="text-primary bg-bg-light w-10 h-10 rounded-xl p-2 hidden md:block"
+            />
             <span class="w-full flex flex-row justify-between md:flex-col">
-              <span class="font-medium">{{ specification.title }}</span>
-              <span>{{ specification.value }}</span>
+              <span>{{ specification.title }}</span>
+              <span class="font-medium">{{ specification.value }}</span>
             </span>
           </li>
         </ul>
       </div>
 
-      <Button class="button">Забронировать автомобиль</Button>
+      <Button class="button" @click="openBooking"
+        ><span class="grid items-center w-90">
+          <span class="col-[1/2] row-[1/2]">Забронировать автомобиль</span>
+          <Icon
+            class="opacity-0 transition duration-200 -translate-x-10 col-[1/2] row-[1/2] justify-self-end text-2xl group-hover/button:opacity-100 group-hover/button:translate-x-0"
+            icon="tabler:arrow-right"
+          /> </span
+      ></Button>
 
       <div class="card shadow-(--shadow-s-in) description">
         <h3 class="mb-3">Описание</h3>
