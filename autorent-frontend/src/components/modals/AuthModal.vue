@@ -1,21 +1,22 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
-import { ref, watch } from "vue";
+import { ref } from "vue";
+import type { Ref } from "vue";
+import { useBodyLock } from "@/composables/useBodyLock";
 import Button from "../ui/Button.vue";
 import LoginForm from "./LoginForm.vue";
 import RegisterForm from "./RegisterForm.vue";
 
-const props = defineProps<{
-  modelValue: boolean;
-  initialMode?: AuthMode;
-}>();
 
 type AuthMode = "login" | "register";
 
-const mode = ref<AuthMode>(props.initialMode ?? "login");
-
+const props = defineProps<{
+  initialMode?: AuthMode;
+}>();
 const emit = defineEmits(["update:modelValue"]);
-
+const modelValue = defineModel<boolean>() as Ref<boolean>;;
+const mode = ref<AuthMode>(props.initialMode ?? "login");
+  
 const close = () => {
   emit("update:modelValue", false);
 };
@@ -24,15 +25,7 @@ const toggleMode = () => {
   mode.value = mode.value === "login" ? "register" : "login";
 };
 
-watch(
-  () => props.modelValue,
-  (isOpen) => {
-    if (isOpen && props.initialMode) {
-      mode.value = props.initialMode;
-    }
-    document.body.style.overflow = isOpen ? "hidden" : "";
-  },
-);
+useBodyLock(modelValue);
 </script>
 
 <template>
@@ -48,7 +41,7 @@ watch(
         <!-- modal -->
         <div class="z-110 relative p-0 flex flex-col w-[min(80%,30rem)]">
           <div
-            class="p-8 bg-blue-500 rounded-t-2xl shadow-(--shadow-m)"
+            class="p-8 bg-linear-to-r from-blue-500 to-blue-600 rounded-t-3xl shadow-(--shadow-m)"
           >
             <h2 class="text-white">
               {{ mode === "register" ? "Добро пожаловать!" : "С возвращением" }}
@@ -66,12 +59,10 @@ watch(
               @click="close"
             />
           </div>
-          <form class="flex flex-col gap-4 px-10 card rounded-t-none relative">
+
+          <div class="flex flex-col gap-5 px-10 card rounded-t-none">
             <LoginForm v-if="mode === 'login'" />
             <RegisterForm v-else />
-            <Button>{{
-              mode == "register" ? "Зарегистрироваться" : "Войти"
-            }}</Button>
 
             <span class="inline-flex gap-1 justify-center"
               >{{ mode === "register" ? "Уже есть аккаунт?" : "Нет аккаунта?"
@@ -81,7 +72,7 @@ watch(
                 }}</Button
               ></span
             >
-          </form>
+          </div>
         </div>
       </div>
     </Transition>

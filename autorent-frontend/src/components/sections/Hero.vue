@@ -50,7 +50,7 @@ const openRegister = () => {
 
     <Button class="z-10" @click="openRegister">
       <span class="inline-flex items-center gap-2"
-        >Начать поездку<Icon icon="tabler:circle-arrow-right-filled" /></span
+        >Начать поездку<Icon class="text-2xl" icon="tabler:circle-arrow-right-filled" /></span
     ></Button>
   </section>
 </template>
