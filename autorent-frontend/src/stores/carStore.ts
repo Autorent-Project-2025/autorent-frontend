@@ -1,9 +1,8 @@
-// stores/cars.ts
 import { defineStore } from "pinia";
 import type { CarPreview } from "@/types/Car";
 import type { CarDetails } from "@/types/Car";
 import { cars_list } from "@/data/MockData";
-import { mapToCarPreview, mapToCarDetails } from "@/mappers/carMapper";
+import { mapToCarPreview, mapToCarDetails } from "@/utils/carMapper";
 
 export const useCarsStore = defineStore("cars", {
   state: () => ({
