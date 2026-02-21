@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import FeaturesCard from "../ui/FeaturesCard.vue";
+import Card from "../ui/Card.vue";
 import StepsCard from "../ui/StepsCard.vue";
 import { ref, computed } from "vue";
 import Button from "../ui/Button.vue";
@@ -82,10 +82,10 @@ const mobileSteps = computed(() =>
 
 const gridLayoutStyles = computed(() => {
   const stepsCount = stepsPairs?.length || 0;
-  
+
   return {
     gridTemplateRows: `auto repeat(${stepsCount}, 1fr)`,
-    gridAutoFlow: 'column'
+    gridAutoFlow: "column",
   };
 });
 </script>
@@ -131,32 +131,31 @@ const gridLayoutStyles = computed(() => {
     </Transition>
 
     <!-- DESKTOP: шаги -->
-      <div
-        class="hidden md:grid gap-4" :style="gridLayoutStyles">
-        <FeaturesCard
-          variant="list"
-          title="Через сайт"
-          icon="tabler:device-desktop"
-        />
+    <div class="hidden md:grid gap-4" :style="gridLayoutStyles">
+      <Card
+        variant="list"
+        title="Через сайт"
+        icon="tabler:device-desktop"
+      />
 
-        <StepsCard
-          variant="left"
-          v-for="step in stepsPairs"
-          v-bind="step.left"
-          :order="step.index"
-        />
+      <StepsCard
+        variant="left"
+        v-for="step in stepsPairs"
+        v-bind="step.left"
+        :order="step.index"
+      />
 
-        <FeaturesCard
-          variant="list-reverse"
-          title="Через приложение"
-          icon="tabler:device-mobile"
-        />
-        <StepsCard
-          variant="right"
-          v-for="step in stepsPairs"
-          v-bind="step.right"
-          :order="step.index"
-        />
-      </div>
+      <Card
+        variant="list-reverse"
+        title="Через приложение"
+        icon="tabler:device-mobile"
+      />
+      <StepsCard
+        variant="right"
+        v-for="step in stepsPairs"
+        v-bind="step.right"
+        :order="step.index"
+      />
+    </div>
   </section>
 </template>

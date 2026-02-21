@@ -6,7 +6,6 @@ export const useAuthStore = defineStore("auth", {
     user: null as User | null,
     token: null as string | null,
   }),
-
   getters: {
     isAuthenticated: (state) => !!state.user,
   },

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import FeaturesCard from "../ui/FeaturesCard.vue";
+import Card from "../ui/Card.vue";
 
 const features = [
   {
@@ -39,13 +39,18 @@ const features = [
 ];
 </script>
 
-
 <template>
   <section class="section">
     <h2 class="text-center">Почему выбирают нас</h2>
 
-    <div class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,25rem),1fr))] gap-4">
-      <FeaturesCard v-for="feature in features" v-bind="feature" variant="card" />
+    <div
+      class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,25rem),1fr))] gap-4"
+    >
+      <Card
+        v-for="feature in features"
+        v-bind="feature"
+        variant="card"
+      />
     </div>
   </section>
 </template>

@@ -25,7 +25,7 @@ const onClick = () => {
 
 const variantClasses: Record<Variant, string> = {
   primary:
-    "px-6 py-3 font-semibold rounded-2xl text-white bg-linear-to-b from-blue-500 to-blue-600 shadow-(--shadow-s) hover:from-blue-700 hover:to-blue-800 hover:shadow-(--glow-l) active:bg-blue-900",
+    "px-6 py-3 font-semibold rounded-2xl text-white bg-linear-to-b from-blue-500 to-blue-600 shadow-(--shadow-s) hover:from-blue-700 hover:to-blue-800 hover:shadow-(--glow-s) active:bg-blue-900",
   secondary:
     "px-6 py-3 font-semibold rounded-2xl text-neutral-100 bg-gray-500 shadow-(--shadow-s) hover:bg-gray-600 active:bg-gray-800",
   disabled:
