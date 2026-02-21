@@ -6,6 +6,12 @@ import Button from "../ui/Button.vue";
 <template>
   <form class="flex flex-col gap-4">
     <Input
+      label="Имя"
+      icon="tabler:user-filled"
+      placeholder="Ваше имя"
+      type="text"
+    />
+    <Input
       label="Email"
       icon="tabler:mail-filled"
       placeholder="example@mail.com"
@@ -18,6 +24,6 @@ import Button from "../ui/Button.vue";
       type="password"
     />
 
-    <Button type="submit">Войти</Button>
+    <Button type="submit">Зарегистрироваться</Button>
   </form>
 </template>
