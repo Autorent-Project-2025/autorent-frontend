@@ -111,8 +111,11 @@
     color: var(--text-muted);
     font-size: clamp(1rem, 1.2vw, 1.25rem);
   }
-  a,
-  button {
+
+  input, label {
+    font-size: clamp(1rem, 1.2vw, 1.25rem);
+  }
+  a, button {
     font-size: clamp(1rem, 1.4vw, 1.25rem);
   }
 }

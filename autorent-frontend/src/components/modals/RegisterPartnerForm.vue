@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import Input from "../ui/Input.vue";
 import Button from "../ui/Button.vue";
+
+
 </script>
 
 <template>
@@ -8,26 +10,14 @@ import Button from "../ui/Button.vue";
     <Input
       label="Название компании"
       icon="tabler:building-community"
-      placeholder="Ваше имя"
-      type="text"
-    />
-    <Input
-      label="БИН / ИИН"
-      icon="tabler:number"
-      placeholder="Ваше имя"
+      placeholder="Название компании"
       type="text"
     />
     <Input
       label="Контактное лицо"
       icon="tabler:user-filled"
-      placeholder="Ваше имя"
+      placeholder="Контактное лицо"
       type="text"
-    />
-    <Input
-      label="Email"
-      icon="tabler:mail-filled"
-      placeholder="example@mail.com"
-      type="email"
     />
     <Input
       label="Пароль"

@@ -2,10 +2,8 @@
 import Button from "../ui/Button.vue";
 import NavLink from "../ui/NavLink.vue";
 import ToggleButton from "../ui/ToggleButton.vue";
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import { Icon } from "@iconify/vue";
-import { useModal } from "@/composables/useModal";
-import AuthModal from "../modals/AuthModal.vue";
 import { useBodyLock } from "@/composables/useBodyLock";
 
 const nav_links = [
@@ -24,11 +22,7 @@ const nav_links = [
 ];
 
 const isOpen = ref(false);
-const authModal = useModal();
 
-const openLogin = () => {
-  authModal.open();
-};
 
 const barClass = computed(() => [
   "block w-full h-0.75 my-1 rounded-full transition-all duration-300 ease-in-out origin-center",
@@ -50,7 +44,6 @@ useBodyLock(isOpen);
   <header
     class="fixed z-99 top-0 left-0 right-0 flex items-center justify-between px-[5%] py-4 bg-bg/60 backdrop-blur-md"
   >
-    <AuthModal v-model="authModal.isOpen.value" initial-mode="login" />
     <div class="flex gap-8 items-center">
       <span class="logo primary-text">AutoRent</span>
       <nav class="items-center gap-8 hidden lg:flex">
@@ -90,14 +83,17 @@ useBodyLock(isOpen);
 
     <div class="flex gap-4 items-center">
       <ToggleButton />
-      <Button @click="openLogin"
+      <Button @click="$router.push('/auth/login')"
         ><span class="grid place-items-center w-full"
-          ><span class="col-[1/2] row-[1/2] transition-opacity duration-200 hidden md:inline md:group-hover/button:opacity-0">Войти</span
-          ><Icon class="col-[1/2] row-[1/2] text-2xl transition-opacity opacity-100 md:opacity-0 duration-300 
-          md:group-hover/button:opacity-100" icon="tabler:login-2" /></span
+          ><span
+            class="col-[1/2] row-[1/2] transition-opacity duration-200 hidden md:inline md:group-hover/button:opacity-0"
+            >Войти</span
+          ><Icon
+            class="col-[1/2] row-[1/2] text-2xl transition-opacity opacity-100 md:opacity-0 duration-300 md:group-hover/button:opacity-100"
+            icon="tabler:login-2" /></span
       ></Button>
 
-      <button class="w-6 cursor-pointer lg:hidden " @click="isOpen = !isOpen">
+      <button class="w-6 cursor-pointer lg:hidden" @click="isOpen = !isOpen">
         <span
           v-for="i in 3"
           :key="i"
