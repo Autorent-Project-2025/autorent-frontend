@@ -10,7 +10,8 @@ const isAuthLayout = computed(() => route.meta.layout === "auth");
 </script>
 
 <template>
-  <Navbar v-if="!isAuthLayout" />
+  <div class="min-h-screen grid grid-rows-[1fr_auto]">
+  <Navbar v-if="!isAuthLayout" class="fixed top-0 left-0 right-0" />
 
   <main>
     <router-view v-slot="{ Component, route }">
@@ -21,4 +22,5 @@ const isAuthLayout = computed(() => route.meta.layout === "auth");
   </main>
 
   <Footer v-if="!isAuthLayout" />
+  </div>
 </template>

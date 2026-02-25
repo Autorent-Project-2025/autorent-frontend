@@ -2,7 +2,7 @@
 import { Icon } from "@iconify/vue";
 
 defineProps<{
-  label: string;
+  label?: string;
   icon?: string;
   placeholder: string;
   type: string;
@@ -11,10 +11,10 @@ defineProps<{
 
 <template>
   <div class="flex flex-col gap-2">
-    <label class="font-medium">{{ label }}</label>
+    <label v-if="label" class="font-medium">{{ label }}</label>
     <span class="grid items-center text-text">
       <input
-        class="peer row-[1/2] col-[1/2] w-full pl-10 pr-4 py-2 rounded-2xl shadow-(--shadow-s-in) bg-bg-light border border-border"
+        class="peer row-[1/2] col-[1/2] w-full pl-10 pr-4 py-2 rounded-2xl bg-bg-light border-2 border-border"
         :type="type"
         :placeholder="placeholder"
         required

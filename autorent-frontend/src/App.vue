@@ -5,10 +5,13 @@ import { useRoute } from "vue-router";
 import { computed } from "vue";
 
 const route = useRoute();
-const isPartnerLayout = computed(() => route.meta.layout === "partner");
+const layoutComponent = computed(() => {
+  return route.meta.layout === "partner"
+    ? PartnerLayout
+    : DefaultLayout;
+});
 </script>
 
 <template>
-  <PartnerLayout v-if="isPartnerLayout" />
-  <DefaultLayout v-else />
+  <component :is="layoutComponent" />
 </template>

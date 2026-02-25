@@ -5,29 +5,39 @@ import { ref } from "vue";
 
 const sidebar_links = [
   {
-    name: "Дэшборд",
-    icon: "tabler:dashboard",
+    name: "Главная",
+    icon: "tabler:layout-dashboard",
     link: "/partner",
   },
   {
     name: "Мои машины",
     icon: "tabler:car",
-    link: "/partner/cars",
+    link: "/partner-cars",
   },
   {
-    name: "Брронирования",
-    icon: "tabler:calendar",
-    link: "/partner/bookings",
+    name: "Заявки",
+    icon: "tabler:package",
+    link: "/partner-requests",
   },
   {
     name: "Доходы",
     icon: "tabler:currency-dollar",
-    link: "/partner/finance",
+    link: "/partner-finance",
   },
   {
     name: "Настройки",
     icon: "tabler:settings",
-    link: "/partner/settings",
+    link: "/partner-settings",
+  },
+  {
+    name: "Профиль",
+    icon: "tabler:user",
+    link: "/partner-profile",
+  },
+  {
+    name: "Выход",
+    icon: "tabler:logout",
+    link: "/logout",
   },
 ];
 
@@ -37,32 +47,40 @@ const isOpen = ref(true);
 <template>
   <div
     :class="[
-      'sticky top-0 p-8 flex flex-col gap-6 bg-bg transition-all duration-300 overflow-hidden',
-      isOpen ? 'w-75 items-start' : 'w-25 items-center',
+      'py-4 bg-bg shadow-(--shadow-m) transition-all duration-300 whitespace-nowrap overflow-hidden',
+      isOpen ? 'w-72 px-6' : 'w-16 px-2',
     ]"
   >
-    <div class="flex items-center justify-between w-full">
-      <RouterLink v-if="isOpen" to="/">
-        <span class="logo primary-text">AutoRent</span>
-      </RouterLink>
+    <RouterLink
+      to="/"
+      :class="[
+        'transition duration-300',
+        isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none',
+      ]"
+    >
+      <span class="logo primary-text inline-block mb-5">AutoRent</span>
+    </RouterLink>
 
-      <Icon
-        @click="isOpen = !isOpen"
-        icon="tabler:chevrons-left"
-        class="w-9 h-9 hover:bg-slate-400 rounded-full p-1 transition duration-300"
-        :class="{ 'rotate-180': !isOpen }"
-      />
-    </div>
-    <nav class="flex flex-col gap-4 items-start">
-      <NavLink v-for="link in sidebar_links" :link="link.link"
-        ><span class="inline-flex gap-2 items-center"
-          ><Icon class="text-2xl" :icon="link.icon" /><span
-            v-if="isOpen"
-            class="whitespace-nowrap"
-          >
-            {{ link.name }}
-          </span></span
-        ></NavLink
+    <Icon
+      @click="isOpen = !isOpen"
+      icon="tabler:chevrons-left"
+      :class="['absolute top-5 right-6 w-9 h-9 hover:bg-primary/40 rounded-full p-1 transition duration-300', 
+        isOpen ? '' : 'rotate-180 translate-x-2'
+      ]"
+      
+    />
+      <nav class="flex flex-col gap-2">
+      <NavLink
+        v-for="link in sidebar_links"
+        :link="link.link"
+        variant="sidebar"
+      >
+        <Icon class="w-6 h-6 shrink-0" :icon="link.icon" /><span
+          :class="[
+            'transition duration-300', isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none',]"
+        >
+          {{ link.name }}
+        </span></NavLink
       >
     </nav>
   </div>

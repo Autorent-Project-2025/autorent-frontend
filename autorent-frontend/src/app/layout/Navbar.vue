@@ -2,7 +2,6 @@
 import Button from "@/shared/ui/Button.vue";
 import NavLink from "@/shared/ui/NavLink.vue";
 import ToggleButton from "@/shared/ui/ToggleButton.vue";
-
 import { ref, computed } from "vue";
 import { Icon } from "@iconify/vue";
 import { useBodyLock } from "@/shared/composables/useBodyLock";
@@ -42,7 +41,7 @@ useBodyLock(isOpen);
 
 <template>
   <header
-    class="fixed z-99 top-0 left-0 right-0 flex items-center justify-between px-[5%] py-4 bg-bg/60 backdrop-blur-md"
+    class="z-99 flex items-center justify-between px-[5%] py-4 bg-bg/60 backdrop-blur-md"
   >
     <div class="flex gap-8 items-center">
       <span class="logo primary-text">AutoRent</span>

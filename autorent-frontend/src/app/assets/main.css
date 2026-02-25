@@ -17,7 +17,7 @@
   );
   --primary: var(--color-blue-700);
   --overlay: var(--color-neutral-100);
-  --border: var(--color-gray-200);
+  --border: var(--color-gray-300);
 
   --shadow-s: 0px 2px 4px hsla(0, 0%, 0%, 0.4);
   --shadow-m: 0px 4px 8px hsla(0, 0%, 0%, 0.4);
@@ -80,11 +80,6 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-  }
-  #app {
-    min-height: 100vh;
-    display: grid;
-    grid-template-rows: 1fr auto;
   }
   body {
     background-color: var(--bg-dark);
