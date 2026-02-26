@@ -1,0 +1,70 @@
+/* Плавное переход активного фото в CarView */
+.animate-fade {
+  animation: fade 0.5s ease-out;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+/* Плавная переход между страницами */
+.fade-up-enter-active, .slide-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.fade-up-leave-active, .slide-leave-active {
+  transition: all 0.2s ease-in;
+}
+
+/* Начальное состояние при появлении и конечное при исчезновении */
+.fade-up-enter-from {
+  opacity: 0;
+  transform: translateY(-1rem);
+}
+
+.fade-up-leave-to {
+  opacity: 0;
+  transform: translateY(-1rem);
+}
+
+.slide-enter-from, .slide-leave-to {
+  opacity: 0;
+  transform: translateX(0);
+}
+
+.fade-down-enter-active {
+  transition: all 0.4s ease-out;
+}
+
+.fade-down-leave-active {
+  transition: all 0.3s ease-in;
+}
+
+.fade-down-enter-from {
+  opacity: 0;
+  transform: translateY(-1rem);
+}
+
+.fade-down-leave-to {
+  opacity: 0;
+  transform: translateY(-1rem);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+
+

@@ -1,29 +1,17 @@
-<template>
-  <div
-    class="relative min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300"
-  >
-    <!-- Mouse Glow Effect - самый низкий слой -->
-    <MouseGlow />
-
-    <!-- Content - поверх -->
-    <div class="relative z-10">
-      <Navbar />
-      <router-view />
-      <ToastContainer />
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { onMounted } from "vue";
-import Navbar from "./components/Navbar.vue";
-import ToastContainer from "./components/ToastContainer.vue";
-import MouseGlow from "./components/MouseGlow.vue";
-import { useTheme } from "./composables/useTheme";
+import PartnerLayout from "./app/layout/PartnerLayout.vue";
+import DefaultLayout from "./app/layout/DefaultLayout.vue";
+import { useRoute } from "vue-router";
+import { computed } from "vue";
 
-// Инициализация темы при загрузке приложения
-const { initTheme } = useTheme();
-onMounted(() => {
-  initTheme();
+const route = useRoute();
+const layoutComponent = computed(() => {
+  return route.meta.layout === "partner"
+    ? PartnerLayout
+    : DefaultLayout;
 });
 </script>
+
+<template>
+  <component :is="layoutComponent" />
+</template>
