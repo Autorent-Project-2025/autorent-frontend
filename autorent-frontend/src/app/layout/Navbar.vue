@@ -2,7 +2,9 @@
 import Button from "@/shared/ui/Button.vue";
 import NavLink from "@/shared/ui/NavLink.vue";
 import ToggleButton from "@/shared/ui/ToggleButton.vue";
-import { ref, computed } from "vue";
+import { auth } from "@/modules/auth/stores/auth";
+import { useRouter } from "vue-router";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { Icon } from "@iconify/vue";
 import { useBodyLock } from "@/shared/composables/useBodyLock";
 
@@ -37,6 +39,38 @@ const getBarClass = (index: number) => {
 };
 
 useBodyLock(isOpen);
+
+const router = useRouter();
+const isAuthenticated = computed(() => {
+  // Проверяем валидность токена
+  if (auth.token) {
+    return auth.checkTokenValidity();
+  }
+  return false;
+});
+const scrolled = ref(false);
+const mobileMenuOpen = ref(false);
+
+function logout() {
+  auth.logout();
+  router.push("/login");
+}
+
+// Track scroll position
+const handleScroll = () => {
+  scrolled.value = window.scrollY > 20;
+};
+
+onMounted(() => {
+  window.addEventListener("scroll", handleScroll);
+
+  // Проверяем токен при монтировании компонента
+  auth.checkTokenValidity();
+});
+
+onUnmounted(() => {
+  window.removeEventListener("scroll", handleScroll);
+});
 </script>
 
 <template>
@@ -81,11 +115,20 @@ useBodyLock(isOpen);
 
     <div class="flex gap-4 items-center">
       <ToggleButton />
-      <Button @click="$router.push('/auth/login')"
+      <Button v-if="!isAuthenticated" @click="router.push('/auth/login')"
         ><span class="grid place-items-center w-full"
           ><span
             class="col-[1/2] row-[1/2] transition-opacity duration-200 hidden md:inline md:group-hover/button:opacity-0"
             >Войти</span
+          ><Icon
+            class="col-[1/2] row-[1/2] text-2xl transition-opacity opacity-100 md:opacity-0 duration-300 md:group-hover/button:opacity-100"
+            icon="tabler:login-2" /></span
+      ></Button>
+      <Button v-else variant="text" @click="logout"
+        ><span class="grid place-items-center w-full"
+          ><span
+            class="col-[1/2] row-[1/2] transition-opacity duration-200 hidden md:inline md:group-hover/button:opacity-0"
+            >Выйти</span
           ><Icon
             class="col-[1/2] row-[1/2] text-2xl transition-opacity opacity-100 md:opacity-0 duration-300 md:group-hover/button:opacity-100"
             icon="tabler:login-2" /></span
