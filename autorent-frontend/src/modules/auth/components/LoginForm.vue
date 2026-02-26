@@ -18,6 +18,6 @@ import Button from "@/shared/ui/Button.vue";
       type="password"
     />
 
-    <Button type="submit" to="/partner">Войти</Button>
+    <Button type="submit" @click="$router.push('/partner')">Войти</Button>
   </form>
 </template>

@@ -14,6 +14,7 @@ import RequestsView from "@/modules/partner/pages/RequestsView.vue";
 import FinanceView from "@/modules/partner/pages/FinanceView.vue";
 import SettingsView from "@/modules/partner/pages/SettingsView.vue";
 import ProfileView from "@/modules/partner/pages/ProfileView.vue";
+import CarDetailView from "@/modules/partner/pages/CarDetailView.vue";
 
 const routes = [
   { path: "/", component: HomeView },
@@ -45,6 +46,12 @@ const routes = [
     path: "/partner-cars",
     name: "partner-cars",
     component: PartnerCarsView,
+    meta: { layout: "partner" },
+  },
+  {
+    path: `/partner-cars/:id`,
+    name: "partner-car",
+    component: CarDetailView,
     meta: { layout: "partner" },
   },
   {

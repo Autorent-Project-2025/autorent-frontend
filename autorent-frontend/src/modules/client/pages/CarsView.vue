@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import CarsCard from "../components/CarsCard.vue";
-import { useCarsStore } from "@/modules/client/stores/carStore";
+import { useCarsStore } from "@/app/stores/carStore";
 import type { CarDetails, CarPreview } from "@/shared/types/Car";
 import BookingModal from "../components/BookingModal.vue";
 import type { BookingDraft } from "@/shared/types/Booking";

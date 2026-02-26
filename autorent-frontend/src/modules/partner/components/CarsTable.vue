@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
-import { useCarsStore } from "@/modules/client/stores/carStore";
+import { useCarsStore } from "@/app/stores/carStore";
+import Features from "@/shared/ui/Features.vue";
+import Button from "@/shared/ui/Button.vue";
 
 const carsStore = useCarsStore();
 carsStore.loadCars();
@@ -27,7 +29,7 @@ carsStore.loadCars();
         >
           <td class="p-4">{{ car.brand }} {{ car.model }}</td>
 
-          <td class="py-4 text-green-400">В аренде</td>
+          <td><Features type="green">В аренде</Features></td>
 
           <td class="py-4">
             <div class="flex items-center gap-1">
@@ -39,7 +41,7 @@ carsStore.loadCars();
           <td class="py-4">{{ car.priceHour * 10 }}$</td>
 
           <td class="py-4">
-            <button class="text-primary hover:underline cursor-pointer">Подробнее</button>
+            <Button variant="underline">Подробнее</Button>
           </td>
         </tr>
       </tbody>

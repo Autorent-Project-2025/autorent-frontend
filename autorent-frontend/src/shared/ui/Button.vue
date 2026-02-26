@@ -4,7 +4,7 @@ import { computed } from "vue";
 type Variant = "primary" | "secondary" | "outline" | "text" | "underline";
 const props = withDefaults(
   defineProps<{
-    to?: string;
+    href?: string;
     variant?: Variant;
     active?: boolean;
     disabled?: boolean;
@@ -47,12 +47,12 @@ const buttonClass = computed(() => [
 
 <template>
   <component
-    :is="to ? 'RouterLink' : 'button'"
+    :is="href ? 'a' : 'button'"
     :class="buttonClass"
-    :type="to ? undefined : 'button'"
+    :type="href ? undefined : 'button'"
     @click="!props.disabled && onClick"
-    :to="to"
-    :disabled="!to  && props.disabled"
+    :href="href"
+    :disabled="!href  && props.disabled"
   >
     <slot />
   </component>

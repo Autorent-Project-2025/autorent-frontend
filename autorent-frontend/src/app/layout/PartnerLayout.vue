@@ -9,7 +9,7 @@ import { RouterView } from "vue-router";
     <PartnerNavbar class="navbar" />
     <Sidebar class="sidebar" />
     <main class="main">
-      <router-view v-slot="{ Component, route }">
+        <router-view v-slot="{ Component, route }">
         <Transition mode="out-in" name="fade-up">
           <component :is="Component" :key="route.path" />
         </Transition>

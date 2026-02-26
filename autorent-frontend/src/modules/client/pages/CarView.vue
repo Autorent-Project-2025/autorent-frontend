@@ -7,7 +7,7 @@ import BookingModal from "../components/BookingModal.vue";
 
 import { Icon } from "@iconify/vue";
 import type { CarDetails } from "../../../shared/types/Car";
-import { useCarsStore } from "../stores/carStore";
+import { useCarsStore } from "../../../app/stores/carStore";
 import type { BookingDraft } from "@/shared/types/Booking";
 import { mapCarToBookingDraft } from "@/shared/utils/bookingMapper";
 
