@@ -1,0 +1,143 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --bg-dark: var(--color-gray-300);
+  --bg: var(--color-gray-200);
+  --bg-light: var(--color-gray-100);
+  --text: hsl(0, 0%, 5%);
+  --text-muted: hsl(0, 0%, 20%);
+  --gradient: linear-gradient(
+    to right,
+    var(--color-blue-600),
+    var(--color-blue-700)
+  );
+  --primary: var(--color-blue-700);
+  --overlay: var(--color-neutral-100);
+  --border: var(--color-gray-300);
+
+  --shadow-s: 0px 2px 4px hsla(0, 0%, 0%, 0.4);
+  --shadow-m: 0px 4px 8px hsla(0, 0%, 0%, 0.4);
+  --shadow-l: 0px 6px 10px hsla(0, 0%, 0%, 0.4);
+
+  --shadow-s-in: inset 0px 2px 4px hsla(0, 0%, 0%, 0.4);
+  --shadow-m-in: inset 0px 4px 8px hsla(0, 0%, 0%, 0.4);
+  --shadow-l-in: inset 0px 6px 10px hsla(0, 0%, 0%, 0.4);
+}
+
+.dark {
+  --bg-dark: var(--color-gray-950);
+  --bg: var(--color-gray-900);
+  --bg-light: var(--color-gray-800);
+  --text: hsl(0, 0%, 95%);
+  --text-muted: hsl(0, 0%, 80%);
+  --gradient: linear-gradient(
+    to right,
+    var(--color-blue-400),
+    var(--color-blue-500)
+  );
+  --primary: var(--color-blue-400);
+  --overlay: var(--color-neutral-950);
+  --border: var(--color-gray-800);
+
+  --s-s: 0px 2px 4px hsla(0, 0%, 0%, 0.6);
+  --s-m: 0px 4px 8px hsla(0, 0%, 0%, 0.6);
+  --s-l: 0px 6px 10px hsla(0, 0%, 0%, 0.6);
+
+  --s-s-in: inset 0px 2px 4px hsla(0, 0%, 0%, 0.6);
+  --s-m-in: inset 0px 4px 8px hsla(0, 0%, 0%, 0.6);
+  --s-l-in: inset 0px 6px 10px hsla(0, 0%, 0%, 0.6);
+}
+
+@theme {
+  --color-bg-dark: var(--bg-dark);
+  --color-bg: var(--bg);
+  --color-bg-light: var(--bg-light);
+  --bg-gradient: var(--gradient);
+  --color-primary: var(--primary);
+  --color-overlay: var(--overlay);
+  --color-border: var(--border);
+
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+
+  --shadow-s: var(--s-s);
+  --shadow-m: var(--s-m);
+  --shadow-l: var(--s-l);
+
+  --shadow-s-in: var(--s-s-in);
+  --shadow-m-in: var(--s-m-in);
+  --shadow-l-in: var(--s-l-in);
+
+  --glow-s: 0px 0px 10px var(--color-blue-500);
+  --glow-m: 0px 0px 14px var(--color-blue-500);
+  --glow-l: 0px 0px 18px var(--color-blue-500);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--bg-dark);
+    font-family: "Montserrat", sans-serif;
+    color: var(--text);
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  h1 {
+    font-weight: 800;
+    font-size: clamp(2rem, 3.6vw, 3rem);
+  }
+  h2 {
+    font-weight: 800;
+    font-size: clamp(1.5rem, 2vw, 2rem);
+  }
+  h3 {
+    font-weight: 600;
+    font-size: clamp(1.25rem, 1.4vw, 1.5rem);
+  }
+  p {
+    color: var(--text-muted);
+    font-size: clamp(1rem, 1.2vw, 1.25rem);
+  }
+
+  input, label {
+    font-size: clamp(1rem, 1.2vw, 1.25rem);
+  }
+  a, button {
+    font-size: clamp(1rem, 1.4vw, 1.25rem);
+  }
+}
+
+@layer components {
+  .section {
+    @apply p-[5%] flex flex-col gap-6;
+  }
+  .logo {
+    font-size: clamp(1.5rem, 3.2vw, 1.75rem);
+    font-weight: 700;
+  }
+  .overlay-text {
+    @apply text-sm backdrop-blur-xl bg-neutral-300/20 text-neutral-50 px-3 py-2 rounded-full border border-neutral-200;
+  }
+  .card {
+    @apply bg-bg p-5 border border-border rounded-3xl shadow-(--shadow-m);
+  }
+  .card-hover {
+    @apply md:transition-[translate,background-color,box-shadow] md:duration-300 
+    md:hover:bg-bg-light/80 md:hover:shadow-(--shadow-l) md:hover:-translate-y-2;
+  }
+  .primary-text {
+    @apply bg-(image:--bg-gradient) text-transparent bg-clip-text;
+  }
+
+  .photo {
+    @apply w-full aspect-video rounded-2xl object-cover;
+  }
+}
