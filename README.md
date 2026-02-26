@@ -8,7 +8,7 @@
 - **Vue 3**
 - **TypeScript**
 - **Vite**
-- **Tailwind CSS v3**
+- **Tailwind CSS v4**
 - **Axios**
 - **JWT Authentication**
 
