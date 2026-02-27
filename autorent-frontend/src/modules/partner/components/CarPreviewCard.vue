@@ -2,6 +2,9 @@
 import type { CarPreview } from "@/shared/types/Car";
 import Button from "@/shared/ui/Button.vue";
 import { Icon } from "@iconify/vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 defineProps<{ car: CarPreview }>();
 </script>
@@ -21,7 +24,7 @@ defineProps<{ car: CarPreview }>();
           отзывов)</span
         >
       </div>
-      <Button @click="$router.push(`/partner-cars/${car.id}`)">Подробнее</Button>
+      <Button @click="router.push(`/partner-cars/${car.id}`)">Подробнее</Button>
     </div>
   </div>
 </template>

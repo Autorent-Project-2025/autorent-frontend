@@ -3,7 +3,9 @@ import Button from "@/shared/ui/Button.vue";
 import { Icon } from "@iconify/vue";
 import type { CarPreview } from "@/shared/types/Car";
 import Features from "@/shared/ui/Features.vue";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const props = defineProps<{ car: CarPreview }>();
 const emit = defineEmits<{ (e: "book", car: CarPreview): void }>();
 const bookCar = () => {
@@ -13,7 +15,7 @@ const bookCar = () => {
 
 <template>
   <div
-    @click="$router.push(`/cars/${car.id}`)"
+    @click="router.push(`/cars/${car.id}`)"
     class="card card-hover p-0 relative group cursor-pointer max-w-xl"
   >
     <div class="overflow-hidden rounded-t-2xl grid">

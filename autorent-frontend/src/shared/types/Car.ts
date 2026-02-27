@@ -29,7 +29,7 @@ export interface CarDetails {
   brand: string;
   model: string;
   year?: number;
-  
+  comments?: CarComment[];
   priceHour: number;
   priceDay: number;
   

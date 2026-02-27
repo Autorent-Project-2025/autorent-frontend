@@ -1,6 +1,6 @@
 import api from "./axios";
 import type { Car, CarDetails } from "../../shared/types/Car";
-import type { PaginatedResponse } from "../types/Pagination";
+import type { PaginatedResponse } from "../../shared/types/Pagination";
 
 // Функция для преобразования PascalCase → camelCase
 function toCamelCase(obj: any): any {
@@ -50,11 +50,11 @@ export async function getCars(
       // Преобразуем camelCase → PascalCase для бэкенда
       let apiSortBy = params.sortBy;
       if (params.sortBy === "priceHour") {
-        apiSortBy = "PriceHour";
+        apiSortBy = "priceHour";
       } else if (params.sortBy === "rating") {
-        apiSortBy = "Rating";
+        apiSortBy = "rating";
       } else if (params.sortBy === "year") {
-        apiSortBy = "Year";
+        apiSortBy = "year";
       }
       queryParams.append("sortBy", apiSortBy);
       console.log("📤 Sending sortBy to API:", apiSortBy);
