@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
 import { computed } from "vue";
-import { RouterView, useRoute } from "vue-router";
+import { RouterView, useRoute, useRouter } from "vue-router";
 import Button from "@/shared/ui/Button.vue";
 
 
 const route = useRoute();
+const router = useRouter();
 
 const headerTitle = computed(() => {
   switch (route.name) {
@@ -43,7 +44,7 @@ const headerSubtitle = computed(() => {
     ></div>
     <span
       class="absolute top-4 left-[5%] logo primary-text cursor-pointer"
-      @click="$router.push('/')"
+      @click="router.push('/')"
       >AutoRent</span
     >
     <div class="w-[min(80%,30rem)] z-10">
@@ -67,7 +68,7 @@ const headerSubtitle = computed(() => {
           variant="text"
           @click="
             {
-              $router.push(
+              router.push(
                 '/auth/' + (route.name === 'login' ? 'register' : 'login'),
               );
             }

@@ -2,6 +2,9 @@
 import Card from "../ui/Card.vue";
 import Button from "../ui/Button.vue";
 import { Icon } from "@iconify/vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 </script>
 
@@ -34,7 +37,7 @@ import { Icon } from "@iconify/vue";
       <Card variant="list" title="Без залога" icon="tabler:coin" />
     </div>
 
-    <Button class="z-10" @click="$router.push('/auth/register')">
+    <Button class="z-10" @click="router.push('/auth/register')">
       <span class="inline-flex items-center gap-2"
         >Начать поездку<Icon
           class="text-2xl"

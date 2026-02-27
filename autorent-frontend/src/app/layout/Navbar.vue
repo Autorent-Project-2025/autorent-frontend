@@ -49,7 +49,6 @@ const isAuthenticated = computed(() => {
   return false;
 });
 const scrolled = ref(false);
-const mobileMenuOpen = ref(false);
 
 function logout() {
   auth.logout();
