@@ -1,6 +1,6 @@
 import api from "./axios";
 import type { Booking } from "../../shared/types/Booking";
-import type { PaginatedResponse } from "../types/Pagination";
+import type { PaginatedResponse } from "../../shared/types/Pagination";
 
 export interface GetMyBookingsParams {
   page?: number;
