@@ -20,7 +20,7 @@ async function onRegister() {
   try {
     await register(name.value, email.value, password.value);
     success("Регистрация успешна! Теперь войдите в систему.");
-    router.push("/login");
+    router.push("/auth/login");
   } catch (e: any) {
     const errorMsg =
       e.response?.data?.error || "Ошибка при регистрации. Попробуйте снова.";
@@ -56,6 +56,6 @@ async function onRegister() {
       v-model="password"
     />
 
-    <Button type="submit">Зарегистрироваться</Button>
+    <Button @click="onRegister" type="submit">Зарегистрироваться</Button>
   </form>
 </template>
