@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import Card from "../ui/Card.vue";
-import StepsCard from "../ui/StepsCard.vue";
+import Card from "@/shared/ui/Card.vue";
+import StepsCard from "@/shared/ui/StepsCard.vue";
 import { ref, computed } from "vue";
-import Button from "../ui/Button.vue";
+import Button from "@/shared/ui/Button.vue";
 
 const stepsPairs = [
   {

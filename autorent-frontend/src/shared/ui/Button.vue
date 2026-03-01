@@ -8,6 +8,7 @@ const props = withDefaults(
     variant?: Variant;
     active?: boolean;
     disabled?: boolean;
+    type?: "button" | "submit" | "reset";
   }>(),
   {
     variant: "primary",
@@ -49,7 +50,7 @@ const buttonClass = computed(() => [
   <component
     :is="href ? 'a' : 'button'"
     :class="buttonClass"
-    :type="href ? undefined : 'button'"
+    :type="href ? undefined : (props.type || 'button')"
     @click="!props.disabled && onClick"
     :href="href"
     :disabled="!href  && props.disabled"

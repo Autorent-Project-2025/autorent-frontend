@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { auth } from "../stores/auth";
+import { useAuthStore } from "../stores/authStore";
 import Input from "@/shared/ui/Input.vue";
 import Button from "@/shared/ui/Button.vue";
 import { useToast } from "@/shared/composables/useToast";
 
+const auth = useAuthStore();
 const router = useRouter();
 const email = ref("");
 const password = ref("");
@@ -19,7 +20,6 @@ async function onLogin() {
   try {
     await auth.login(email.value, password.value);
     success("Добро пожаловать!");
-    router.push("/cars");
   } catch (err) {
     error("Ошибка входа! Проверьте email и пароль.");
   } finally {
@@ -45,6 +45,6 @@ async function onLogin() {
       type="password"
     />
 
-    <Button type="submit" @click="onLogin">Войти</Button>
+    <Button type="submit" @click="router.push('/cars')">Войти</Button>
   </form>
 </template>

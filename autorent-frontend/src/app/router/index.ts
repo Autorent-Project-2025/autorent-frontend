@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "@/shared/pages/HomeView.vue";
+import HomeView from "@/modules/auth/pages/HomeView.vue";
 import CarsView from "@/modules/client/pages/CarsView.vue";
 import BookingsView from "@/modules/client/pages/BookingsView.vue";
 import CarView from "@/modules/client/pages/CarView.vue";

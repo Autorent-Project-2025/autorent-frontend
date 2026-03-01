@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Card from "../ui/Card.vue";
-import Button from "../ui/Button.vue";
+import Card from "@/shared/ui/Card.vue";
+import Button from "@/shared/ui/Button.vue";
 import { Icon } from "@iconify/vue";
 import { useRouter } from "vue-router";
 
@@ -10,7 +10,7 @@ const router = useRouter();
 
 <template>
   <section
-    class="section h-[min(100dvh,50rem)] pt-20 justify-center items-start relative bg-[url('./images/home-bg.jpg')] bg-cover bg-center bg-no-repeat"
+    class="section h-[min(100dvh,50rem)] pt-20 justify-center items-start relative bg-[url('/images/home-bg.jpg')] bg-cover bg-center bg-no-repeat"
   >
     <div
       class="absolute inset-0 bg-linear-to-r from-overlay to-overlay/10 backdrop-blur-sm lg:backdrop-blur-none"

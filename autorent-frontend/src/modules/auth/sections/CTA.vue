@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
-import Button from "../ui/Button.vue";
+import Button from "@/shared/ui/Button.vue";
 </script>
 
 <template>

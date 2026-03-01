@@ -2,7 +2,7 @@
 import Button from "@/shared/ui/Button.vue";
 import NavLink from "@/shared/ui/NavLink.vue";
 import ToggleButton from "@/shared/ui/ToggleButton.vue";
-import { auth } from "@/modules/auth/stores/auth";
+import { useAuthStore } from "@/modules/auth/stores/authStore";
 import { useRouter } from "vue-router";
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { Icon } from "@iconify/vue";
@@ -24,6 +24,7 @@ const nav_links = [
 ];
 
 const isOpen = ref(false);
+const auth = useAuthStore();
 
 const barClass = computed(() => [
   "block w-full h-0.75 my-1 rounded-full transition-all duration-300 ease-in-out origin-center",
@@ -52,7 +53,7 @@ const scrolled = ref(false);
 
 function logout() {
   auth.logout();
-  router.push("/login");
+  router.push("/auth/login");
 }
 
 // Track scroll position
@@ -79,10 +80,9 @@ onUnmounted(() => {
     <div class="flex gap-8 items-center">
       <span class="logo primary-text">AutoRent</span>
       <nav class="items-center gap-8 hidden lg:flex">
-        <NavLink
-          v-for="link in nav_links"
-          :link="link.link"
-        >{{ link.name }}</NavLink>
+        <NavLink v-for="link in nav_links" :link="link.link">{{
+          link.name
+        }}</NavLink>
       </nav>
 
       <!-- Mobile nav -->
