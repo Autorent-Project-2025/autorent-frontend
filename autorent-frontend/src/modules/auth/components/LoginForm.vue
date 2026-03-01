@@ -20,6 +20,7 @@ async function onLogin() {
   try {
     await auth.login(email.value, password.value);
     success("Добро пожаловать!");
+    router.push("/cars");
   } catch (err) {
     error("Ошибка входа! Проверьте email и пароль.");
   } finally {
@@ -45,6 +46,6 @@ async function onLogin() {
       type="password"
     />
 
-    <Button type="submit" @click="router.push('/cars')">Войти</Button>
+    <Button type="submit" @click="onLogin">Войти</Button>
   </form>
 </template>
